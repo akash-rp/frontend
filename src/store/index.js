@@ -5,6 +5,7 @@ const store = createStore({
     return {
       firstName: "",
       email: "",
+      servers: [],
     };
   },
   mutations: {
@@ -13,6 +14,9 @@ const store = createStore({
     },
     setEmail(state, email) {
       state.email = email;
+    },
+    setServers(state, servers) {
+      state.servers = servers;
     },
   },
 });

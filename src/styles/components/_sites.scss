@@ -1,0 +1,42 @@
+.table {
+  width: 600px;
+  background: white;
+  border-radius: 5px;
+  box-shadow: 0px 2px 5px 1px rgba(64, 60, 67, 0.16);
+  margin-top: 1rem;
+  &_title {
+    font-size: 2rem;
+    padding: 0.5rem 1rem;
+  }
+}
+
+.cell {
+  font-size: 1.5rem;
+  display: inline-block;
+  padding: 1rem;
+  &-site {
+    width: 30%;
+  }
+  &-domain {
+    width: 50%;
+  }
+  &-user {
+    width: 20%;
+  }
+}
+
+.cell-header {
+}
+
+.header {
+  background-color: whitesmoke;
+  color: gray;
+}
+
+.row {
+  border-bottom: 2px solid #f2f4f9;
+}
+
+.row:last-child {
+  border-bottom: 0;
+}

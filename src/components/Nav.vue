@@ -3,7 +3,9 @@
     <div class="nav__logo"><a href="#">Hosting</a></div>
     <div class="nav__settings">
       <ul class="nav__settings-ul">
-        <li class="nav__setting-item-1 item">Server</li>
+        <li class="nav__setting-item-1 item" @click="$router.push('/servers')">
+          Server
+        </li>
         <li class="nav__setting-item-2 item">App</li>
       </ul>
     </div>
@@ -32,8 +34,13 @@
         </button>
       </form>
     </div>
-    <div class="nav__profile">
-      <img :src="gravatarUrl" alt="profile" class="nav__profile-image" />
+    <div class="nav__profile" v-show="showgravatar">
+      <img
+        :src="gravatarUrl"
+        @load="showGravatar"
+        alt="profile"
+        class="nav__profile-image"
+      />
     </div>
   </nav>
 </template>
@@ -57,6 +64,7 @@ export default {
   data() {
     return {
       gravatar: "",
+      showgravatar: false,
     };
   },
   computed: {
@@ -85,6 +93,11 @@ export default {
           console.log(err);
         });
     }
+  },
+  methods: {
+    showGravatar() {
+      this.showgravatar = true;
+    },
   },
 };
 </script>

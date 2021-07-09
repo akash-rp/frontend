@@ -1,0 +1,95 @@
+.servers {
+  padding: 2rem 5rem;
+
+  &__padding {
+    padding: 2rem;
+  }
+
+  &__main {
+    display: flex;
+  }
+}
+
+.title {
+  font-size: 4rem;
+
+  &__button {
+    background-color: var(--color-primary);
+    color: white;
+    width: 12rem;
+    margin-left: 2rem;
+    border-radius: 5px;
+    border: none;
+    font-size: 1.5rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+}
+
+.create-server {
+  background-color: var(--color-primary);
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  box-shadow: 5px 5px 5px #888888;
+  flex-direction: column;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: 2px 2px 2px #888888;
+  }
+
+  &__svg {
+    width: 13rem;
+    height: 13rem;
+    align-self: end;
+    fill: white;
+  }
+
+  &__p {
+    color: white;
+    font-size: 2rem;
+    margin-top: 0rem;
+  }
+}
+
+.svr {
+  display: flex;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: white;
+  box-shadow: 0px 1px 4px #888888;
+  margin-bottom: 1rem;
+  height: 6rem;
+  width: 50%;
+
+  & > * {
+    padding: 1rem;
+  }
+  &__list {
+    display: flex;
+    flex-direction: column;
+  }
+  &__name {
+    font-size: 2rem;
+    text-transform: capitalize;
+    display: flex;
+    align-items: center;
+  }
+
+  &__prov {
+  }
+
+  &__ip {
+    display: flex;
+    align-items: center;
+    font-size: 1.75rem;
+  }
+  &__image {
+    height: 5rem;
+    display: flex;
+    align-self: center;
+    width: 5rem;
+  }
+}

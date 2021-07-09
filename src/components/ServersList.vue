@@ -9,17 +9,17 @@
     <div class="servers__padding"></div>
     <div class="server__list">
       <div
-        class="server"
+        class="svr"
         v-for="server in servers"
         v-bind:key="server.name"
         @click="$router.push('/server/' + server.serverid)"
       >
         <img
-          class="server__image"
+          class="svr__image"
           :src="'/assets/providers/' + server.provider + '.svg'"
         />
-        <p class="server__name">{{ server.name }}</p>
-        <p class="server__ip">{{ server.ip }}</p>
+        <p class="svr__name">{{ server.name }}</p>
+        <p class="svr__ip">{{ server.ip }}</p>
       </div>
     </div>
   </div>
@@ -29,7 +29,6 @@
 export default {
   data() {
     return {
-      servers: "",
       error: "",
       providerImg: "",
     };
@@ -57,10 +56,14 @@ export default {
             this.error = data.error;
             return;
           }
-          this.servers = data;
-          console.log(data);
+          this.$store.commit("setServers", data);
         })
         .catch((err) => (this.error = err));
+    },
+  },
+  computed: {
+    servers() {
+      return this.$store.state.servers;
     },
   },
 };

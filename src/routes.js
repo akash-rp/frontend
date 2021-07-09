@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import Login from "./components/Login";
-import Servers from "./components/Servers";
+import Servers from "./components/ServersList";
 import Register from "./components/Register";
 import NewServer from "./components/NewServer";
 import Server from "./components/Server";
