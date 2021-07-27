@@ -5,7 +5,7 @@
   background-color: white;
   box-shadow: 0 10px 25px rgba(92, 99, 105, 0.2);
   font-family: sans-serif;
-  font-size: 1.5rem;
+  font-size: var(--font-size-primary);
 
   border-radius: 10px;
 
@@ -17,7 +17,7 @@
       border-radius: 5px;
       border: 2px solid #ebebeb;
       font-family: sans-serif;
-      font-size: 1.5rem;
+      font-size: var(--font-size-primary);
       &:focus {
         outline: none;
         border: 2px solid var(--color-primary);
@@ -32,7 +32,7 @@
       margin-right: 14px;
       border: 2px solid #ebebeb;
       font-family: sans-serif;
-      font-size: 1.5rem;
+      font-size: var(--font-size-primary);
       &:focus {
         outline: none;
         border: 2px solid var(--color-primary);
@@ -46,7 +46,7 @@
       border-radius: 5px;
       border: 2px solid #ebebeb;
       font-family: sans-serif;
-      font-size: 1.5rem;
+      font-size: var(--font-size-primary);
       &:focus {
         outline: none;
         border: 2px solid var(--color-primary);
@@ -60,7 +60,7 @@
       border-radius: 5px;
       border: 2px solid #ebebeb;
       font-family: sans-serif;
-      font-size: 1.5rem;
+      font-size: var(--font-size-primary);
 
       &:focus {
         outline: none;
@@ -75,7 +75,7 @@
       border-radius: 5px;
       border: none;
       color: white;
-      font-size: 1.7rem;
+      font-size: var(--font-size-small-header);
     }
   }
 }

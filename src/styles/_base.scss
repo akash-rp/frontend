@@ -1,5 +1,8 @@
 :root {
   --color-primary: #1633ff;
+  --font-size-primary: 1.4rem;
+  --font-size-header: 2.4rem;
+  --font-size-small-header: 1.6rem;
 }
 * {
   box-sizing: border-box;
@@ -8,7 +11,7 @@
 }
 
 html {
-  font-size: 12px;
+  font-size: 10px;
   font-family: "Open Sans";
 }
 

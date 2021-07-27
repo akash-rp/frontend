@@ -10,7 +10,7 @@
 
   &__logo {
     padding: 1rem;
-    font-size: 1.5rem;
+    font-size: var(--font-size-small-header);
 
     a {
       color: white;
@@ -19,8 +19,7 @@
   }
 
   &__settings {
-    font-size: 1.6rem;
-
+    font-size: var(--font-size-small-header);
     &-ul {
       display: flex;
       justify-content: space-between;

@@ -8,7 +8,9 @@
 
     <div class="Server_details">
       <server-info :server="server"></server-info>
-      <sites></sites>
+      <div class="Server_summary">
+        <sites></sites>
+      </div>
     </div>
   </div>
   <p>{{ error }}</p>

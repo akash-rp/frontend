@@ -42,12 +42,17 @@
   &_band {
     flex: 1;
   }
+  &_summary {
+    display: grid;
+    grid-template-columns: [first] 50% [line2] auto [end];
+    grid-template-rows: [row1-start] auto [row1-end] auto [third-line] auto [last-line];
+  }
 }
 .box {
   padding: 1rem;
   margin-right: 1rem;
   background-color: white;
-  border-radius: 5px;
+  border-radius: 3px;
   box-shadow: 0px 2px 5px 1px rgba(64, 60, 67, 0.16);
 }
 
@@ -65,7 +70,7 @@
   display: flex;
   justify-content: space-between;
   &_title {
-    font-size: 1.5rem;
+    font-size: var(--font-size-small-header);
     color: royalblue;
     align-self: center;
     font-weight: bolder;
@@ -81,17 +86,20 @@
   background-color: #e3e0e0;
   height: 30px;
   border-radius: 5px;
+  box-shadow: inset 0px 0px 4px rgba(2, 2, 2, 0.3);
 }
 
 .bar_text {
-  text-align: right;
-  padding-top: 2px;
   color: white;
-  font-size: 1.5rem;
+  font-size: var(--font-size-primary);
+  display: flex;
+  align-items: center;
+  float: left;
+  flex-direction: row-reverse;
+  font-weight: bolder;
 }
 
 .bar_used {
-  width: 90%;
   background-color: #04aa6d;
   height: 30px;
   border-bottom-left-radius: 5px;
@@ -101,7 +109,7 @@
 .bar_usage {
   display: flex;
   justify-content: space-between;
-  font-size: 1.5rem;
+  font-size: var(--font-size-primary);
 }
 .details {
   margin-top: 1rem;

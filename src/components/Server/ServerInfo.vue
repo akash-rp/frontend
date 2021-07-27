@@ -76,11 +76,13 @@
       </div>
       <div class="details">
         <div class="bar">
-          <div class="bar_used bar_text">90%</div>
+          <div class="bar_used bar_text" :style="{ width: perMemory + '%' }">
+            {{ perMemory }}%
+          </div>
         </div>
         <div class="bar_usage">
           <p>0</p>
-          <p>0.98GB</p>
+          <p>{{ Number(server.totalMemory / 1000).toFixed(2) + "GB" }}</p>
         </div>
       </div>
     </div>
@@ -214,6 +216,19 @@
 <script>
 export default {
   props: ["server"],
+  data() {
+    return {
+      perMemory: "",
+      perDisk: "",
+    };
+  },
+  watch: {
+    server() {
+      this.perMemory = Math.round(
+        (this.$props.server.usedMemory / this.$props.server.totalMemory) * 100
+      );
+    },
+  },
 };
 </script>
 

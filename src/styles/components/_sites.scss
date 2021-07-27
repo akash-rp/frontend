@@ -1,17 +1,27 @@
 .table {
-  width: 600px;
   background: white;
-  border-radius: 5px;
+  border-radius: 3px;
   box-shadow: 0px 2px 5px 1px rgba(64, 60, 67, 0.16);
   margin-top: 1rem;
   &_title {
-    font-size: 2rem;
+    font-size: var(--font-size-small-header);
     padding: 0.5rem 1rem;
+    color: royalblue;
+    line-height: 4rem;
+    font-weight: bolder;
+  }
+  &_sites {
+    grid-row: 1/2;
+    grid-column: 1/2;
+    margin-right: 2rem;
+  }
+  &_ssh {
+    margin-right: 2rem;
   }
 }
 
 .cell {
-  font-size: 1.5rem;
+  font-size: var(--font-size-primary);
   display: inline-block;
   padding: 1rem;
   &-site {

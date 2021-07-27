@@ -151,7 +151,7 @@ h1 {
   left: 0;
   width: 100%;
   height: 100%;
-  font-size: 1.5rem;
+  font-size: var(--font-size-primary);
   border: 1px solid rgb(209, 214, 223);
   border-radius: 0.5rem;
   outline: none;
@@ -166,7 +166,7 @@ h1 {
   padding: 0 0.25rem;
   background-color: #fff;
   color: rgb(209, 214, 223);
-  font-size: 1.5rem;
+  font-size: var(--font-size-primary);
   transition: 0.3s;
 }
 .form__button {
@@ -175,7 +175,7 @@ h1 {
   border: none;
   background-color: blue;
   color: white;
-  font-size: 1.5rem;
+  font-size: var(--font-size-primary);
   border-radius: 0.5rem;
   cursor: pointer;
   transition: 0.3s;
@@ -195,7 +195,7 @@ h1 {
   top: -0.5rem;
   left: 0.8rem;
   color: blue;
-  font-size: 1.5rem;
+  font-size: var(--font-size-primary);
   font-weight: 500;
   z-index: 10;
 }
