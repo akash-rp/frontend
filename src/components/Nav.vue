@@ -1,39 +1,13 @@
 <template>
-  <nav class="nav">
-    <div class="nav__logo"><a href="#">Hosting</a></div>
-    <div class="nav__settings">
-      <ul class="nav__settings-ul">
-        <li class="nav__setting-item-1 item" @click="$router.push('/servers')">
-          Server
-        </li>
-        <li class="nav__setting-item-2 item">App</li>
-      </ul>
+  <nav class="nav flex-initial flex flex-col bg-blue-600 h-screen w-60">
+    <div class="nav__logo h-20"></div>
+    <div class="nav__optins flex-1">
+      <router-link class="text-2xl text-white option" to="/servers/">Server</router-link>
+      
+      <router-link class="text-2xl text-white option" to="/servers/">Sites</router-link>
+
     </div>
-    <div class="nav__search">
-      <form v-on:submit.prevent="">
-        <input
-          type="text"
-          class="nav__search-input"
-          placeholder="Search Server/Application"
-        />
-        <button class="nav__search-button">
-          <svg
-            version="1.1"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 129 129"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
-            enable-background="new 0 0 129 129"
-            class="nav__search-icon"
-          >
-            <g>
-              <path
-                d="M51.6,96.7c11,0,21-3.9,28.8-10.5l35,35c0.8,0.8,1.8,1.2,2.9,1.2s2.1-0.4,2.9-1.2c1.6-1.6,1.6-4.2,0-5.8l-35-35   c6.5-7.8,10.5-17.9,10.5-28.8c0-24.9-20.2-45.1-45.1-45.1C26.8,6.5,6.5,26.8,6.5,51.6C6.5,76.5,26.8,96.7,51.6,96.7z M51.6,14.7   c20.4,0,36.9,16.6,36.9,36.9C88.5,72,72,88.5,51.6,88.5c-20.4,0-36.9-16.6-36.9-36.9C14.7,31.3,31.3,14.7,51.6,14.7z"
-              />
-            </g>
-          </svg>
-        </button>
-      </form>
-    </div>
+    
     <div class="nav__profile" v-show="showgravatar">
       <img
         :src="gravatarUrl"
@@ -101,3 +75,82 @@ export default {
   },
 };
 </script>
+
+//
+<style lang="scss" scoped>
+// .nav {
+//   display: flex;
+//   background-color: var(--color-primary);
+//   justify-content: space-between;
+//   align-items: center;
+//   color: white;
+//   //   padding: 1rem 1rem;
+//   height: 5rem;
+//   padding: 0 5rem;
+
+//   &__logo {
+//     padding: 1rem;
+//     font-size: var(--font-size-small-header);
+
+//     a {
+//       color: white;
+//       text-decoration: none;
+//     }
+//   }
+
+//   &__settings {
+//     font-size: var(--font-size-small-header);
+//     &-ul {
+//       display: flex;
+//       justify-content: space-between;
+//       list-style: none;
+//     }
+//   }
+
+//   &__search {
+//     flex: 0 0 20%;
+//     margin-right: auto;
+
+//     &-input {
+//       width: 90%;
+//       height: 2.5rem;
+//       border-radius: 3px;
+//       margin-right: -2rem;
+//       border: none;
+//       padding: 1rem;
+
+//       &:focus {
+//         outline: none;
+//       }
+//     }
+
+//     &-button {
+//       background-color: white;
+//       border: none;
+//     }
+
+//     &-icon {
+//       height: 1.5rem;
+//       width: 1.5rem;
+//       background-color: white;
+//       top: 0.2rem;
+//       position: relative;
+//     }
+//   }
+
+//   .item {
+//     padding: 1rem;
+//     cursor: pointer;
+//   }
+
+//   &__profile {
+//     margin-right: 1rem;
+//     &-image {
+//       height: 3.5rem;
+//       width: 3.5rem;
+//       border-radius: 50%;
+//     }
+//   }
+// }
+//
+</style>

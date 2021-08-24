@@ -1,0 +1,20 @@
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+@layer components {
+  .main {
+    @apply flex-1 mr-10 font-roboto;
+  }
+  .option {
+    @apply m-2 p-6 flex flex-col items-center hover:bg-blue-800 hover:rounded-lg font-semibold;
+  }
+  .options {
+    @apply font-roboto font-medium text-2xl text-dimgray leading-12 mb-4;
+  }
+  .btncard {
+    @apply inline-flex items-center justify-center text-xl font-semibold leading-none rounded py-3 px-5 text-white;
+  }
+}

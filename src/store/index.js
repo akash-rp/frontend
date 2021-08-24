@@ -6,6 +6,8 @@ const store = createStore({
       firstName: "",
       email: "",
       servers: [],
+      sites: {},
+      currentSite: {},
     };
   },
   mutations: {
@@ -17,6 +19,19 @@ const store = createStore({
     },
     setServers(state, servers) {
       state.servers = servers;
+    },
+    setSites(state, sites) {
+      state.sites = Object.assign(state.sites, sites);
+    },
+    setCurrentSite(state, site) {
+      state.currentSite = site;
+    },
+  },
+  actions: {
+    getSites({ commit }, route) {
+      fetch("http://localhost/server/" + route.route.params.serverid + "/sites")
+        .then((response) => response.json())
+        .then((data) => commit("setSites", data));
     },
   },
 });
