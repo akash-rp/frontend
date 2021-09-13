@@ -117,7 +117,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .new_site {
   background-color: white;
   height: max-content;

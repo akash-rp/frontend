@@ -66,10 +66,10 @@
     <span
       class="p-2 w-36 inline-block text-black shadow-inner rounded"
       :class="{
-        'nopointer bg-gray-200': site.subDomain,
-        'cursorPointer bg-gray-300': !site.subDomain,
+        'nopointer bg-gray-200': site.subDomain || type == 'alias',
+        'cursorPointer bg-gray-300': !site.subDomain || type !== 'alias',
       }"
-      @click="this.$emit('route', site.url, site.routing, site.subDomain)"
+      @click="checkRouting"
     >
       {{ site.routing }}
     </span>
@@ -142,6 +142,17 @@ export default {
   computed: {
     wildcard() {
       return this.site.wildcard ? "On" : "Off";
+    },
+  },
+  methods: {
+    checkRouting() {
+      if (this.type !== "alias" || !this.site.subDomain)
+        this.$emit(
+          "route",
+          this.site.url,
+          this.site.routing,
+          this.site.subDomain
+        );
     },
   },
 };

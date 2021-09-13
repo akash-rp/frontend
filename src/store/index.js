@@ -26,6 +26,9 @@ const store = createStore({
     setCurrentSite(state, site) {
       state.currentSite = site;
     },
+    setCurrentPHP(state, php) {
+      state.currentSite.php = php;
+    },
   },
   actions: {
     getSites({ commit }, route) {

@@ -13,10 +13,20 @@
           :to="/site/ + this.$route.params.siteid + /domains/"
           >Domains</router-link
         >
-        <a href="#" class="options">PHP Settings</a>
+        <router-link
+          class="options"
+          :to="/site/ + this.$route.params.siteid + /php/"
+          >PHP</router-link
+        >
         <a href="#" class="options">Settings</a>
-        <a href="#" class="options">OpenLitespeed</a>
-        <a href="#" class="options">Backup</a>
+        <a href="#" class="options">Litespeed</a>
+        <router-link
+          class="options"
+          :to="/site/ + this.$route.params.siteid + /backups/"
+          >Backup</router-link
+        >
+        <a href="#" class="options">Tools</a>
+        <a href="#" class="options">Firewall</a>
         <a href="#" class="options">Logs</a>
         <a href="#" class="options">Delete Site</a>
       </div>

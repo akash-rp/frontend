@@ -11,6 +11,8 @@ import NewSite from "./components/Site/NewSite";
 import Site from "./components/Site/Site";
 import SiteSummary from "./components/Site/Summary";
 import Domains from "./components/Site/Domain/Domain";
+import PHP from "./components/Site/PHP/PHP";
+import Backup from "./components/Site/Backup/Backup";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -50,6 +52,14 @@ const router = createRouter({
         {
           path: "domains",
           component: Domains,
+        },
+        {
+          path: "php",
+          component: PHP,
+        },
+        {
+          path: "backups",
+          component: Backup,
         },
       ],
     },

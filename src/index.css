@@ -17,4 +17,19 @@
   .btncard {
     @apply inline-flex items-center justify-center text-xl font-semibold leading-none rounded py-3 px-5 text-white;
   }
+  .font-primary {
+    font-size: var(--font-size-primary);
+  }
+  .phpinput {
+    @apply p-3 border border-gray-400 rounded;
+  }
+  .phplabel {
+    @apply mr-4 w-1/4 inline-block text-lg;
+  }
+  .settings {
+    @apply mb-8;
+  }
+  .phptype {
+    @apply mr-4 text-lg ml-2;
+  }
 }
