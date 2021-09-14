@@ -1,4 +1,7 @@
 <template>
+  <div>
+    <a href="#">Settings</a>
+  </div>
   <section>
     <h1 class="font-bold text-3xl">Backups</h1>
     <button class="bg-blue-700 rounded py-4 px-5 text-white mt-6">
@@ -119,12 +122,12 @@
           <div
             class="custom-select inline-block"
             :class="{
-              'w-44': selected == '1 Week',
-              'w-24': selected != '1 Week',
+              'w-44': selected == 'Weekly',
+              'w-24': selected != 'Weekly',
             }"
             :tabindex="tabindex"
             @blur="openDay = false"
-            v-if="selected == '1 Week' || selected == '1 Month'"
+            v-if="selected == 'Weekly' || selected == 'Monthly'"
           >
             <div
               class="selected bg-gray-200 day"
@@ -137,8 +140,8 @@
               class="items mt-2 h-40 overflow-auto"
               :class="{
                 selectHide: !openDay,
-                'w-44': selected == '1 Week',
-                'w-24': selected != '1 Week',
+                'w-44': selected == 'Weekly',
+                'w-24': selected != 'Weekly',
               }"
             >
               <div
@@ -159,40 +162,58 @@
           </div>
         </div>
       </div>
-      <div class="mt-6">
-        <span class="text-2xl text-gray-700 mr-4 w-52 inline-block"
-          >Backup Retention</span
+      <span class="text-2xl text-gray-700 mr-4 w-52 inline-block mt-6"
+        >Backup Retention</span
+      >
+      <div class="mt-6 ml-6" v-if="selected == 'Hourly'">
+        <label for="hourly" class="text-2xl text-gray-700 w-44 inline-block"
+          >Hourly Backup</label
         >
-        <div
-          class="custom-select inline-block w-44"
-          :tabindex="tabindex"
-          @blur="openRetention = false"
-        >
-          <div
-            class="selected bg-gray-200"
-            :class="{ open: open }"
-            @click.self="openRetention = !openRetention"
-          >
-            {{ selectedRetention }}
-          </div>
-          <div class="items mt-2" :class="{ selectHide: !openRetention }">
-            <div
-              v-for="(option, i) of backupRetention"
-              :key="i"
-              @click="
-                selectedRetention = option;
-                openRetention = false;
-                $emit('input', option);
-              "
-              class="hover:bg-gray-100"
-            >
-              <p>
-                {{ option }}
-              </p>
-            </div>
-          </div>
-        </div>
+        <input
+          class="ml-4 px-2 py-4 w-24 border text-xl"
+          id="hourly"
+          type="number"
+          v-model="retentionHorly"
+        />
+        <p class="inline-block text-xl text-gray-700 ml-4">Day</p>
       </div>
+      <div class="mt-6 ml-6">
+        <label for="daily" class="text-2xl text-gray-700 w-44 inline-block"
+          >Daily Backup</label
+        >
+        <input
+          class="ml-4 px-2 py-4 w-24 border text-xl"
+          id="daily"
+          type="number"
+          v-model="retention.daily"
+        />
+        <p class="inline-block text-xl text-gray-700 ml-4">Week</p>
+      </div>
+      <div class="mt-6 ml-6">
+        <label for="weekly" class="text-2xl text-gray-700 w-44 inline-block"
+          >Weekly Backup</label
+        >
+        <input
+          class="ml-4 px-2 py-4 w-24 border text-xl"
+          id="weekly"
+          type="number"
+          v-model="retention.weekly"
+        />
+        <p class="inline-block text-xl text-gray-700 ml-4">Month</p>
+      </div>
+      <div class="mt-6 ml-6">
+        <label for="monthly" class="text-2xl text-gray-700 w-44 inline-block"
+          >Monthly Backup</label
+        >
+        <input
+          class="ml-4 px-2 py-4 w-24 border text-xl"
+          id="monthly"
+          type="number"
+          v-model="retention.monthly"
+        />
+        <p class="inline-block text-xl text-gray-700 ml-4">Year</p>
+      </div>
+
       <button class="bg-blue-700 text-white py-4 px-5 rounded">Update</button>
     </div>
     <div class="mt-6">
@@ -206,29 +227,11 @@ export default {
   data() {
     return {
       tabindex: 1,
-      selected: "None",
+      selected: "Daily",
       open: false,
       selectedRetention: "None",
       openRetention: false,
-      backupFrequncy: [
-        "1 Hour",
-        "2 Hours",
-        "3 Hours",
-        "6 Hours",
-        "12 Hours",
-        "1 Day",
-        "3 Days",
-        "1 Week",
-        "1 Month",
-      ],
-      backupRetention: [
-        "1 Day",
-        "3 Days",
-        "1 Week",
-        "2 Weeks",
-        "1 Month",
-        "2 Months",
-      ],
+      backupFrequncy: ["Hourly", "Daily", "Weekly", "Monthly"],
       openMinute: false,
       openHour: false,
       selectedMinute: "00",
@@ -237,23 +240,15 @@ export default {
       openDay: false,
       selectedDay: "--",
       time: { hour: [], minute: [], day: [] },
+      retention: { daily: "" },
     };
   },
   created() {
-    this.getBackup();
+    // this.getBackup();
     this.minute();
     this.hour();
   },
   methods: {
-    getBackup() {
-      fetch("http://localhost/site/" + this.$route.params.siteid + "/getbackup")
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
-          this.automatic = data.automatic;
-          this.selected = data.frequency;
-        });
-    },
     minute() {
       for (let i = 0; i < 61; i++) {
         let num = i.toLocaleString("en-US", {
@@ -275,7 +270,7 @@ export default {
   },
   watch: {
     selected() {
-      if (this.selected == "1 Week") {
+      if (this.selected == "Weekly") {
         this.time.day = [
           "Monday",
           "Tuesday",
@@ -286,7 +281,7 @@ export default {
           "Sunday",
         ];
       }
-      if (this.selected == "1 Month") {
+      if (this.selected == "Monthly") {
         this.time.day = [];
         for (let i = 1; i <= 28; i++) {
           let num = i.toLocaleString("en-US", {
