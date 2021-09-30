@@ -29,6 +29,25 @@ const store = createStore({
     setCurrentPHP(state, php) {
       state.currentSite.php = php;
     },
+    // updateRetentionDaily(state, daily) {
+    //   state.currentSite.backup.retention.daily = daily;
+    // },
+    // updateRetentionHourly(state, value) {
+    //   state.currentSite.backup.retention.hourly = value;
+    // },
+    // updateRetentionWeekly(state, value) {
+    //   state.currentSite.backup.retention.weekly = value;
+    // },
+    // updateRetentionMonthly(state, value) {
+    //   state.currentSite.backup.retention.monthly = value;
+    // },
+    // updateBackupAutomatic(state, value) {
+    //   state.currentSite.backup.automatic = value;
+    // },
+
+    updateBackup(state, value) {
+      state.currentSite.localbackup = value;
+    },
   },
   actions: {
     getSites({ commit }, route) {

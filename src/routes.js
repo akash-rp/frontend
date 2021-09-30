@@ -13,6 +13,8 @@ import SiteSummary from "./components/Site/Summary";
 import Domains from "./components/Site/Domain/Domain";
 import PHP from "./components/Site/PHP/PHP";
 import Backup from "./components/Site/Backup/Backup";
+import BackupSettings from "./components/Site/Backup/BackupSettings";
+import BackupListLocal from "./components/Site/Backup/LocalBackupList";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -60,6 +62,14 @@ const router = createRouter({
         {
           path: "backups",
           component: Backup,
+          children: [
+            {
+              path: "settings",
+              component: BackupSettings,
+              name: "backupSettings",
+            },
+            { path: "", component: BackupListLocal, name: "backup" },
+          ],
         },
       ],
     },

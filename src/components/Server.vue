@@ -51,18 +51,16 @@
     <main class="flex mt-5">
       <div class="flex flex-col mr-10">
         <router-link
-        class="options"
-        
-  :to="/server/ + this.$route.params.serverid"
->
- Summary
-</router-link>
+          class="options"
+          :to="/server/ + this.$route.params.serverid"
+        >
+          Summary
+        </router-link>
 
         <a href="#" class="options">Server Health</a>
         <router-link
           class="options"
           :to="/server/ + this.$route.params.serverid + /sites/"
-          
           >Sites</router-link
         >
         <a href="#" class="options">Database</a>
@@ -76,7 +74,7 @@
         <a href="#" class="options">Logs</a>
         <a href="#" class="options">Delete Server</a>
       </div>
-      <router-view :server="server"></router-view>
+      <router-view :server="server" v-if="server"></router-view>
     </main>
   </div>
 </template>
@@ -178,7 +176,7 @@ export default {
 </script>
 
 <style>
-.options.active{
+.options.active {
   color: black;
 }
 </style>

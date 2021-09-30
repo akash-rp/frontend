@@ -1,0 +1,85 @@
+<div class="mt-6 ml-6" v-if="selected == 'Hourly'">
+  <label for="hourly" class="text-2xl text-gray-700 w-44 inline-block"
+    >Hourly Backup</label
+  >
+  <input
+    class="ml-4 px-2 py-4 w-24 border text-xl"
+    id="hourly"
+    type="number"
+    v-model="retentionHourly"
+  />
+  <p
+    class="inline-block text-xl text-gray-700 ml-4"
+    v-if="retentionHourly == 1"
+  >
+    Day
+  </p>
+  <p class="inline-block text-xl text-gray-700 ml-4" v-if="retentionHourly > 1">
+    Days
+  </p>
+</div>
+<div class="mt-6 ml-6">
+  <label for="daily" class="text-2xl text-gray-700 w-44 inline-block"
+    >Daily Backup</label
+  >
+  <input
+    class="ml-4 px-2 py-4 w-24 border text-xl"
+    id="daily"
+    type="number"
+    v-model="retentionDaily"
+  />
+  <p class="inline-block text-xl text-gray-700 ml-4" v-if="retentionDaily == 1">
+    Week
+  </p>
+  <p class="inline-block text-xl text-gray-700 ml-4" v-if="retentionDaily > 1">
+    Weeks
+  </p>
+</div>
+<div class="mt-6 ml-6">
+  <label for="weekly" class="text-2xl text-gray-700 w-44 inline-block"
+    >Weekly Backup</label
+  >
+  <input
+    class="ml-4 px-2 py-4 w-24 border text-xl"
+    id="weekly"
+    type="number"
+    v-model="retentionWeekly"
+  />
+  <p
+    class="inline-block text-xl text-gray-700 ml-4"
+    v-if="retentionWeekly == 1"
+  >
+    Month
+  </p>
+  <p class="inline-block text-xl text-gray-700 ml-4" v-if="retentionWeekly > 1">
+    Months
+  </p>
+</div>
+<div class="mt-6 ml-6">
+  <label for="monthly" class="text-2xl text-gray-700 w-44 inline-block"
+    >Monthly Backup</label
+  >
+  <input
+    class="ml-4 px-2 py-4 w-24 border text-xl"
+    id="monthly"
+    type="number"
+    v-model="retentionMonthly"
+  />
+  <p
+    class="inline-block text-xl text-gray-700 ml-4"
+    v-if="retentionMonthly == 1"
+  >
+    Year
+  </p>
+  <p
+    class="inline-block text-xl text-gray-700 ml-4"
+    v-if="retentionMonthly > 1"
+  >
+    Years
+  </p>
+</div>
+
+retentionHourly: "currentSite.localbackup.retention.hourly", retentionDaily:
+"currentSite.localbackup.retention.daily", retentionWeekly:
+"currentSite.localbackup.retention.weekly", retentionMonthly:
+"currentSite.localbackup.retention.monthly",
