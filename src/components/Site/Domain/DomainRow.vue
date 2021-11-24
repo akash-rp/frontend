@@ -62,30 +62,15 @@
     >
   </div>
 
-  <div class="Sites_table_cell routing text-center">
-    <span
-      class="p-2 w-36 inline-block text-black shadow-inner rounded"
-      :class="{
-        'nopointer bg-gray-200': site.subDomain || type == 'alias',
-        'cursorPointer bg-gray-300': !site.subDomain || type !== 'alias',
-      }"
-      @click="checkRouting"
-    >
-      {{ site.routing }}
-    </span>
-  </div>
   <div
     class="Sites_table_cell wildcard text-center"
     @click="this.$emit('wildcard', site.url, site.wildcard, site.subDomain)"
   >
     <span
-      class="inline-flex items-center justify-center text-xl leading-none rounded py-3 px-5"
+      class="inline-flex items-center justify-center text-xl leading-none rounded py-3 px-5 cursorPointer"
       :class="{
-        'bg-green-700 text-white font-semibold ':
-          this.site.wildcard && !this.site.subDomain,
-        'bg-red-700 text-white font-semibold ':
-          !this.site.wildcard && !this.site.subDomain,
-        'bg-gray-200 text-black': this.site.subDomain,
+        'bg-green-700 text-white font-semibold ': this.site.wildcard,
+        'bg-red-700 text-white font-semibold ': !this.site.wildcard,
         nopointer: site.subDomain,
         cursorPointer: !site.subDomain,
       }"
@@ -146,7 +131,7 @@ export default {
   },
   methods: {
     checkRouting() {
-      if (this.type !== "alias" || !this.site.subDomain)
+      if (this.type == "primary" && !this.site.subDomain)
         this.$emit(
           "route",
           this.site.url,

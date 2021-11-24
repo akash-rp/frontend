@@ -1,25 +1,27 @@
 <template>
-  <h1 class="text-3xl font-bold">Backup</h1>
-  <div class="mt-4">
-    <router-link
-      class="options mr-4"
-      id="backup"
-      :to="/site/ + this.$route.params.siteid + /backups/"
-      >Local Backups</router-link
-    >
-    <router-link
-      class="options"
-      id="backupSettings"
-      :to="/site/ + this.$route.params.siteid + /backups/ + 'settings'"
-      >Settings</router-link
-    >
-  </div>
+  <div class="main_bg">
+    <h1 class="header">Backup</h1>
+    <div class="mt-4">
+      <router-link
+        class="options mr-4"
+        id="backup"
+        :to="/site/ + this.$route.params.siteid + /backups/"
+        >Local Backups</router-link
+      >
+      <router-link
+        class="options"
+        id="backupSettings"
+        :to="/site/ + this.$route.params.siteid + /backups/ + 'settings'"
+        >Settings</router-link
+      >
+    </div>
 
-  <router-view v-slot="{ Component }">
-    <keep-alive include="backup">
-      <component :is="Component" />
-    </keep-alive>
-  </router-view>
+    <router-view v-slot="{ Component }">
+      <keep-alive include="backup">
+        <component :is="Component" />
+      </keep-alive>
+    </router-view>
+  </div>
 </template>
 
 <style>

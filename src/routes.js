@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import Login from "./components/Login";
-import Servers from "./components/ServersList";
-import Register from "./components/Register";
+import Login from "./components/Login/Login";
+import Servers from "./components/Server/ServersList";
+import Register from "./components/Login/Register";
 import NewServer from "./components/Server/NewServer";
-import Server from "./components/Server";
+import Server from "./components/Server/Server";
 import ServerInfo from "./components/Server/ServerInfo";
 import Sites from "./components/Server/Sites";
 import NewSite from "./components/Site/NewSite";
@@ -15,6 +15,7 @@ import PHP from "./components/Site/PHP/PHP";
 import Backup from "./components/Site/Backup/Backup";
 import BackupSettings from "./components/Site/Backup/BackupSettings";
 import BackupListLocal from "./components/Site/Backup/LocalBackupList";
+import Staging from "./components/Site/Staging/Staging";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -70,6 +71,10 @@ const router = createRouter({
             },
             { path: "", component: BackupListLocal, name: "backup" },
           ],
+        },
+        {
+          path: "staging",
+          component: Staging,
         },
       ],
     },

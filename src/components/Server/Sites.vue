@@ -6,6 +6,7 @@
       :to="/server/ + this.$route.params.serverid + /addsite/"
       >Add Site</router-link
     >
+
     <p class="tagline">All Sites of this server are shown here.</p>
     <div class="Sites_table">
       <div class="Sites_table_row_header ">
@@ -24,6 +25,11 @@
           <router-link :to="/site/ + site.siteId" class="site_url">{{
             site.name
           }}</router-link>
+          <span
+            v-if="site.type == 'staging'"
+            class="text-white bg-yellow-500 p-1 rounded ml-2 text-base"
+            >Staging</span
+          >
         </div>
         <div class="Sites_table_cell site_domain site_bold">
           <a
@@ -82,7 +88,7 @@ export default {
     font-size: var(--font-size-primary);
     text-decoration: none;
   }
-  
+
   &_table_row {
     padding: 2rem 0;
     border-bottom: 2px solid #e4e1e1;

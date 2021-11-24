@@ -2,7 +2,7 @@
   <section>
     <button
       class="bg-blue-700 rounded py-4 px-5 text-white mt-6"
-      @click="takeLocalBackup"
+      @click="takeLocalOndemandBackup"
     >
       Take Backup Now
     </button>
@@ -285,11 +285,12 @@ export default {
     updateBackup() {
       //   console.log(this.siteBackup);
       let backupType;
-      if (this.oldAutomatic === this.automatic) {
+      if (this.oldAutomatic === this.backupSettings.automatic) {
         backupType = "existing";
-      } else {
-        backupType = "new";
-        this.oldAutomatic = !this.oldAutomatic;
+      } else if (this.backupSettings.automatic) {
+        backupType = "enable";
+      } else if (!this.backupSettings.automatic) {
+        backupType = "disable";
       }
       fetch(
         "http://localhost/site/" +
@@ -307,13 +308,16 @@ export default {
         }
       )
         .then((response) => response.json())
-        .then(this.$store.commit("updateBackup", this.backupSettings));
+        .then(() => {
+          this.$store.commit("updateBackup", this.backupSettings);
+          this.oldAutomatic = this.backupSettings.automatic;
+        });
     },
-    takeLocalBackup() {
+    takeLocalOndemandBackup() {
       fetch(
         "http://localhost/site/" +
           this.$route.params.siteid +
-          "/takelocalbackup"
+          "/localondemandbackup"
       );
     },
     minute() {

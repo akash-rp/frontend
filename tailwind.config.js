@@ -8,23 +8,23 @@ module.exports = {
       open: ['"Open Sans"'],
       roboto: ["Roboto"],
     },
-    
+
     extend: {
       lineHeight: {
         "12": "3rem",
       },
       textColor: {
-        "dimgray": "dimgray",
+        dimgray: "dimgray",
       },
-      
     },
   },
 
   variants: {
     extend: {
       borderRadius: ["hover", "focus"],
+      opacity: ["disabled"],
     },
   },
 
-  plugins: [],
+  plugins: [require("@tailwindcss/forms")],
 };

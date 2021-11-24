@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import Nav from "./components/Nav";
+import Nav from "./components/Nav/Nav";
 export default {
   components: {
     Nav,
@@ -98,16 +98,6 @@ body {
 // }
 .ip {
   margin-left: 0 !important;
-}
-
-.main_bg {
-  background-color: white;
-  height: max-content;
-  padding: 1rem 2rem;
-  margin-top: 1rem;
-  border-radius: 3px;
-  box-shadow: 0px 2px 5px 1px rgba(64, 60, 67, 0.16);
-  margin-right: 2rem;
 }
 
 .header {

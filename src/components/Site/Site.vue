@@ -28,9 +28,15 @@
         <a href="#" class="options">Tools</a>
         <a href="#" class="options">Firewall</a>
         <a href="#" class="options">Logs</a>
+        <router-link
+          v-if="site.type == 'live'"
+          class="options"
+          :to="/site/ + this.$route.params.siteid + /staging/"
+          >Staging</router-link
+        >
         <a href="#" class="options">Delete Site</a>
       </div>
-      <div class="main main_bg">
+      <div class="main">
         <router-view></router-view>
       </div>
     </main>

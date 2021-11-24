@@ -225,28 +225,30 @@ export default {
       )
         .then((res) => res.json())
         .then((data) => {
-          this.autoList = JSON.parse(data);
-          this.autoList.sort(function(a, b) {
-            return b.startTime.localeCompare(a.startTime);
-          });
-          this.autoListPagination = {};
-          this.currentPage = 0;
-          let listLength = this.autoList.length;
-          let index = 0;
-          for (let i = 0; listLength > 0; ) {
-            console.log(listLength);
-            if (listLength >= 10) {
-              this.autoListPagination[index] = this.autoList.slice(i, i + 10);
-              listLength = listLength - 10;
-            } else {
-              this.autoListPagination[index] = this.autoList.slice(
-                i,
-                i + listLength
-              );
-              listLength = 0;
+          if (!data.error) {
+            this.autoList = JSON.parse(data);
+            this.autoList.sort(function(a, b) {
+              return b.startTime.localeCompare(a.startTime);
+            });
+            this.autoListPagination = {};
+            this.currentPage = 0;
+            let listLength = this.autoList.length;
+            let index = 0;
+            for (let i = 0; listLength > 0; ) {
+              console.log(listLength);
+              if (listLength >= 10) {
+                this.autoListPagination[index] = this.autoList.slice(i, i + 10);
+                listLength = listLength - 10;
+              } else {
+                this.autoListPagination[index] = this.autoList.slice(
+                  i,
+                  i + listLength
+                );
+                listLength = 0;
+              }
+              index++;
+              i = i + 10;
             }
-            index++;
-            i = i + 10;
           }
         });
     },
