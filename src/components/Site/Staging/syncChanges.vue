@@ -6,14 +6,19 @@
     ref="addDomain"
     @click.self="$emit('close')"
   >
-    <div class="flex flex-col bg-white  w-1/2 rounded">
-      <h1 class="text-4xl font-bold p-10 border-b">
+    <div class="flex flex-col bg-white w-1/2 rounded">
+      <h1 class="text-4xl font-bold p-10 border-b" v-if="syncType == 'push'">
         Push Live Site Changes to Staging Site
       </h1>
-
+      <h1 class="text-4xl font-bold p-10 border-b" v-if="syncType == 'pull'">
+        Pull Staging Site Changes to Live Site
+      </h1>
       <div class="flex flex-col mt-5 px-10">
-        <label class="text-2xl font-semibold mb-3"
+        <label class="text-2xl font-semibold mb-3" v-if="syncType == 'push'"
           >What do you want to push?
+        </label>
+        <label class="text-2xl font-semibold mb-3" v-if="syncType == 'pull'"
+          >What do you want to pull?
         </label>
         <div class="flex items-center">
           <!-- <input type="checkbox" id="files" value="files" v-model="pushType" />
@@ -37,7 +42,7 @@
             type="checkbox"
             class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-offset-0 focus:ring-indigo-200 focus:ring-opacity-50 w-7 h-7 mr-2"
             id="database"
-            value="database"
+            value="db"
             v-model="pushType"
             @change="databaseClicked($event)"
           />
@@ -45,8 +50,11 @@
         </div>
       </div>
       <div class="px-10 mt-5" v-if="showDatabase">
-        <h1 class="text-2xl font-semibold mb-3">
+        <h1 class="text-2xl font-semibold mb-3" v-if="syncType == 'push'">
           How do you want to push the Database
+        </h1>
+        <h1 class="text-2xl font-semibold mb-3" v-if="syncType == 'pull'">
+          How do you want to pull the Database
         </h1>
         <div class="flex items-center">
           <input
@@ -65,7 +73,7 @@
             v-model="dbType"
             @change="selectedPartialDatabase($event)"
           />
-          <label for="redirect" class="text-2xl ">Partial Database</label>
+          <label for="redirect" class="text-2xl">Partial Database</label>
         </div>
         <div class="mb-3" v-if="dbType == 'partial'">
           <h3 class="text-2xl font-semibold mb-3 mt-5">
@@ -101,7 +109,7 @@
               <label :for="table" class="text-xl mr-10">{{ table }}</label>
             </div>
           </div>
-          <div class="max-h-96 ">
+          <div class="max-h-96">
             <div
               v-for="table in tables.slice(tables.length / 2)"
               :key="table"
@@ -152,6 +160,7 @@ export default {
       selectedAll: true,
     };
   },
+  props: ["syncType"],
   methods: {
     databaseClicked(event) {
       if (event.target.checked) {
@@ -185,23 +194,28 @@ export default {
       fetch(
         "http://localhost/site/" +
           this.$store.state.currentSite.siteId +
-          "/push",
+          "/sync",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
+            method: this.syncType,
             type: this.pushType,
-            tables: this.tables,
+            tables: this.selectedTables,
             dbType: this.dbType,
-            isAllSelected: this.selectedAll,
+            allSelected: this.selectedAll,
           }),
         }
       )
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
+          if (data.error) {
+            console.log(data.error);
+          } else {
+            this.$emit("close");
+          }
         });
     },
   },

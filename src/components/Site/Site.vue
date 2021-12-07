@@ -34,20 +34,28 @@
           :to="/site/ + this.$route.params.siteid + /staging/"
           >Staging</router-link
         >
-        <a href="#" class="options">Delete Site</a>
+        <a class="options" @click="showDeletePopup = true">Delete Site</a>
       </div>
       <div class="main">
         <router-view></router-view>
       </div>
     </main>
+    <delete-site v-if="showDeletePopup == true"></delete-site>
   </div>
 </template>
 
 <script>
+import DeleteSite from "./DeleteSite.vue";
 export default {
+  data() {
+    return {
+      showDeletePopup: false,
+    };
+  },
   created() {
     this.getSite();
   },
+  components: { DeleteSite },
   watch: {
     "$route.params.siteid"() {
       if (this.$route.params.siteid == undefined) {

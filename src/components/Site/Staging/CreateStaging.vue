@@ -1,14 +1,19 @@
 <template>
-  <div class="m-auto mt-12 w-1/2">
-    <input
-      type="text"
-      class="border p-4 w-72"
-      placeholder="Enter staging URL"
-      v-model="url"
-    />
-    <button class="bg-indigo-700 rounded p-4 text-white" @click="createStaging">
-      Create Staging site
-    </button>
+  <div class="main_bg">
+    <div class="m-auto mt-12 w-1/2 ">
+      <input
+        type="text"
+        class="border p-4 w-72"
+        placeholder="Enter staging URL"
+        v-model="url"
+      />
+      <button
+        class="bg-indigo-700 rounded p-4 text-white"
+        @click="createStaging"
+      >
+        Create Staging site
+      </button>
+    </div>
   </div>
 </template>
 
@@ -42,7 +47,7 @@ export default {
           if (data) {
             this.$store.commit("setSites", data);
             this.$router.push(
-              "/server/" + this.$route.params.serverid + "/sites"
+              "/server/" + this.$store.state.currentSite.serverId + "/sites"
             );
           }
         });

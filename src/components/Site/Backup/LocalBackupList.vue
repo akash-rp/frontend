@@ -3,10 +3,10 @@
     <p
       class="inline-block p-4 border  text-xl  rounded-l-md cursor-pointer"
       :class="{
-        'text-white bg-indigo-700': mode == 'auto',
-        'hover:bg-gray-100': mode != 'auto',
+        'text-white bg-indigo-700': mode == 'automatic',
+        'hover:bg-gray-100': mode != 'automatic',
       }"
-      @click="mode = 'auto'"
+      @click="mode = 'automatic'"
     >
       Automatic
     </p>
@@ -177,7 +177,7 @@ export default {
           "This process will overwrite both Web Application and Database",
         mode: "",
       },
-      mode: "auto",
+      mode: "automatic",
     };
   },
   created() {
