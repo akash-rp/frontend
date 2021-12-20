@@ -35,6 +35,10 @@ const store = createStore({
     updateBackup(state, value) {
       state.currentSite.localbackup = value;
     },
+    removeSite(state) {
+      state.currentSite = "";
+      state.sites = {};
+    },
   },
   actions: {
     getSites({ commit }, route) {

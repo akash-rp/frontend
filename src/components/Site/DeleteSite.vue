@@ -40,8 +40,8 @@
           <button
             class="rounded text-white font-bold p-5 w-56 mr-10"
             :class="{
-              'cursor-not-allowed bg-red-100': name != checkname,
-              'bg-red-700': name == checkname,
+              'cursor-not-allowed bg-red-100': name != checkName,
+              'bg-red-700': name == checkName,
             }"
             @click="deleteSite"
           >
@@ -61,10 +61,12 @@ export default {
         this.axios
           .get(
             "http://localhost/site/" +
-              this.$store.state.currentSite.staging +
+              this.$store.state.currentSite.siteId +
               "/delete"
           )
           .then(() => {
+            let serverId = this.$store.state.currentSite.serverId;
+            this.$router.push("/server/" + serverId + "/sites");
             this.$store.commit("removeSite");
             this.$emit("close");
           })
