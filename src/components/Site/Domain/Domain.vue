@@ -1,6 +1,11 @@
 <template>
   <div class="main_bg">
     <div class="domain" @click.self="closeDeleteDomain" v-if="site.name">
+      <add-domain
+        v-if="isShowAddDomain"
+        @close="CloseAddDomain"
+        :site="site"
+      ></add-domain>
       <!-- Delete Domain -->
       <delete-domain
         v-if="isShowDeleteDomain"
@@ -26,121 +31,136 @@
       <wildcard
         @close="isShowWildcard = false"
         v-if="isShowWildcard"
-        :url="wildcardUrl"
-        :status="wildcardstatus"
+        :url="wildcard.url"
+        :status="!wildcard.status"
         :site="site"
+        @confirm="changeWildcard"
       ></wildcard>
       <primary
         v-if="isShowPrimary"
         @close="isShowPrimary = false"
         :primaryUrl="toPrimaryUrl"
       ></primary>
-      <h1 class="header">Domain</h1>
-      <button
-        class="float-right p-4 bg-indigo-700 text-white font-semibold text-xl rounded-md"
-        @click="showAddDomain"
-      >
-        Add Domain
-      </button>
-      <add-domain
-        v-if="isShowAddDomain"
-        @close="CloseAddDomain"
-        :site="site"
-      ></add-domain>
-      <p class="tagline">All Domains connected to this site are shown below</p>
-      <div class="Sites_table" v-if="site">
-        <div class="Sites_table_row_header ">
-          <div class="Sites_table_cell name site_header">DOMAIN NAME</div>
-          <div class="Sites_table_cell type site_header text-center">TYPE</div>
-          <div class="Sites_table_cell dns site_header text-center">DNS</div>
-          <div class="Sites_table_cell int site_header text-center">
-            INTEGRATION
-          </div>
-          <div class="Sites_table_cell ssl site_header text-center">SSL</div>
-
-          <div class="Sites_table_cell wildcard site_header text-center">
-            WILDCARD
-          </div>
-        </div>
-        <!------------------------ Primary Domain row-------------------------->
-        <div
-          class="Sites_table_row flex items-center"
-          v-if="site.domain.primary.url"
+      <div class="flex flex-row justify-between items-center">
+        <h1 class="header">Domain</h1>
+        <button
+          class="p-2 bg-indigo-700 text-white font-semibold rounded-md mr-5"
+          @click="showAddDomain"
         >
-          <domain-row
-            :site="site.domain.primary"
-            @showOption="showOption"
-            :menu="domainOptionUrl"
-            @alert="showDeleteDomain"
-            type="primary"
-            @route="showRouting"
-            @wildcard="showWildcard"
-          ></domain-row>
-        </div>
-        <!------------------------------------------Alias row domain--------------------------------->
-        <div
-          class="Sites_table_row flex items-center"
-          v-for="site of site.domain.alias"
-          v-bind:key="site.url"
-        >
-          <domain-row
-            :site="site"
-            @showOption="showOption"
-            :menu="domainOptionUrl"
-            @alert="showDeleteDomain"
-            type="alias"
-            @route="showRouting"
-            @wildcard="showWildcard"
-            @showPrimary="makePrimary"
-          ></domain-row>
-        </div>
-        <!--####################################### Redirect row domain ########################################3 -->
-        <div
-          class="Sites_table_row "
-          v-for="site of site.domain.redirect"
-          v-bind:key="site.url"
-        >
-          <div class="Sites_table_cell name">
-            <a :href="'http://' + site.url" class="site_url">{{ site?.url }}</a>
-          </div>
-          <div class="Sites_table_cell type text-center">
-            <span
-              class="inline-flex items-center justify-center text-xl font-semibold leading-none bg-pink-700 rounded py-3 px-4 text-white"
-              >Redirect</span
+          Add Domain
+        </button>
+      </div>
+      <div class="px-5 pb-5">
+        <p class="tagline">
+          All domains connected to this site are shown below
+        </p>
+      </div>
+      <div class="">
+        <table class="w-full list">
+          <thead class="">
+            <tr style="background-color: #eff3f8" class="text-left row">
+              <th class="cell">Domain Name</th>
+              <th class="cell">Domian Type</th>
+              <th class="cell">Routing</th>
+              <th class="cell">Wildcard</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="row vld-parent">
+              <td class="cell">{{ site.domain.primary.url }}</td>
+              <td class="cell"><tag value="Primary" /></td>
+              <td class="cell">
+                <div
+                  class="border-2 border-indigo-700 w-fit px-2 -my-2 rounded text-indigo-700 font-medium"
+                  v-if="site.domain.primary.routing === 'root'"
+                  @click="
+                    showRouting(
+                      site.domain.primary.url,
+                      site.domain.primary.routing,
+                      site.domain.primary.subdomain
+                    )
+                  "
+                >
+                  Root
+                </div>
+                <div
+                  class="border-2 border-indigo-700 w-fit px-2 -my-2 rounded text-indigo-700 font-medium"
+                  v-if="site.domain.primary.routing === 'www'"
+                  @click="
+                    showRouting(
+                      site.domain.primary.url,
+                      site.domain.primary.routing,
+                      site.domain.primary.subdomain
+                    )
+                  "
+                >
+                  www
+                </div>
+              </td>
+              <td class="cell flex flex-row items-center">
+                <label class="switch ml-2">
+                  <input
+                    type="checkbox"
+                    v-model="site.domain.primary.wildcard"
+                    @change="showWildcard(site.domain.primary, 'primary')"
+                  />
+                  <span class="slider round"></span>
+                </label>
+                <div class="" v-if="loader[site.domain.primary.url] == true">
+                  <Loading
+                    class="hidden"
+                    active="true"
+                    :is-full-page="isActive"
+                    height="40"
+                    width="40"
+                    color="#4f46e5"
+                    z-index="0"
+                    loader="dots"
+                  />
+                </div>
+              </td>
+            </tr>
+            <tr
+              class="row vld-parent"
+              v-for="(domain, i) in site.domain.alias"
+              :key="domain.url"
             >
-          </div>
-          <div class="Sites_table_cell dns text-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-12 inline-block"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-            >
-              <path fill="none" d="M0 0h24v24H0V0z" />
-              <path
-                d="M19 15v4H5v-4h14m1-2H4c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h16c.55 0 1-.45 1-1v-6c0-.55-.45-1-1-1zM7 18.5c-.82 0-1.5-.67-1.5-1.5s.68-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM19 5v4H5V5h14m1-2H4c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h16c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1zM7 8.5c-.82 0-1.5-.67-1.5-1.5S6.18 5.5 7 5.5s1.5.68 1.5 1.5S7.83 8.5 7 8.5z"
-              />
-            </svg>
-          </div>
-          <div class="Sites_table_cell int text-center">None</div>
-
-          <div v-if="!site.ssl" class="Sites_table_cell ssl text-center">
-            <span
-              class="inline-flex items-center justify-center text-xl font-semibold leading-none bg-red-700 rounded py-3 px-5 text-white"
-              >Off</span
-            >
-          </div>
-          <div v-if="site.ssl" class="Sites_table_cell ssl text-center">
-            <span
-              class="inline-flex items-center justify-center text-xl font-semibold leading-none bg-green-700 rounded py-3 px-5 text-white"
-              >On</span
-            >
-          </div>
-
-          <div class="Sites_table_cell routing text-center">none</div>
-          <div class="Sites_table_cell wildcard text-center">OFF</div>
-        </div>
+              <td class="cell">{{ domain.url }}</td>
+              <td class="cell"><tag value="Alias" severity="warning" /></td>
+              <td class="cell">
+                <div
+                  class="border-2 w-fit px-2 -my-2 rounded text-gray-400 border-gray-400 font-medium"
+                  v-if="domain.routing === 'none'"
+                  @click="showRouting(data.url, data.routing, data.subdomain)"
+                >
+                  none
+                </div>
+              </td>
+              <td class="cell">
+                <label class="switch ml-2">
+                  <input
+                    type="checkbox"
+                    v-model="site.domain.alias[i].wildcard"
+                    @change="showWildcard(domain, 'alias')"
+                  />
+                  <span class="slider round"></span>
+                </label>
+                <div class="" v-if="loader[domain.url] == true">
+                  <Loading
+                    class="hidden"
+                    active="true"
+                    :is-full-page="isActive"
+                    height="40"
+                    width="40"
+                    color="#4f46e5"
+                    z-index="0"
+                    loader="dots"
+                  />
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -153,6 +173,12 @@ import DomainRow from "./DomainRow.vue";
 import Routing from "./Routing.vue";
 import Wildcard from "./Wildcard.vue";
 import Primary from "./Primary.vue";
+import DataTable from "primevue/datatable";
+import Column from "primevue/column";
+import Tag from "primevue/tag";
+import InputSwitch from "primevue/inputswitch";
+import Loading from "vue-loading-overlay";
+import "vue-loading-overlay/dist/vue-loading.css";
 
 export default {
   data() {
@@ -166,9 +192,11 @@ export default {
       isShowDeleteDomain: false,
       isShowWildcard: false,
       isShowPrimary: false,
-      wildcardUrl: "",
-      wildcardstatus: "",
+      wildcard: { url: "", status: "", type: "" },
       toPrimaryUrl: "",
+      active: false,
+      isActive: false,
+      loader: {},
     };
   },
   computed: {
@@ -183,8 +211,17 @@ export default {
     Routing,
     Wildcard,
     Primary,
+    DataTable,
+    Column,
+    Tag,
+    InputSwitch,
+    Loading,
   },
   methods: {
+    log(event) {
+      console.log(event);
+    },
+
     showAddDomain() {
       this.isShowAddDomain = true;
     },
@@ -242,12 +279,33 @@ export default {
         this.isShowRouting = true;
       }
     },
-    showWildcard(url, wildcard, subDomain) {
-      if (!subDomain) {
-        this.wildcardUrl = url;
-        this.wildcardstatus = wildcard;
+    showWildcard(domain, type) {
+      if (!domain.isSubDomain) {
+        this.wildcard.url = domain.url;
+        this.wildcard.status = domain.wildcard;
+        this.wildcard.type = type;
         this.isShowWildcard = true;
+        domain.wildcard = !domain.wildcard;
       }
+    },
+    changeWildcard() {
+      this.isShowWildcard = false;
+      this.loader[this.wildcard.url] = true;
+      this.$axios
+        .post("/site/" + this.$route.params.siteid + "/wildcard", {
+          serverid: this.site.serverId,
+          url: this.wildcard.url,
+          wildcard: this.wildcard.status,
+          type: this.wildcard.type,
+        })
+        .then((res) => {
+          this.isShowWildcard = false;
+          this.$store.commit("setCurrentSite", res.data);
+          this.loader[this.wildcard.url] = false;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     changeRoute(routeType, url) {
       fetch("http://localhost/site/" + this.site.siteId + "/changeRoute", {
@@ -291,6 +349,66 @@ export default {
 </script>
 
 <style lang="scss">
+.switch {
+  display: inline-block;
+  position: relative;
+  width: 3rem;
+  height: 1.75rem;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0px;
+  background-color: #ccc;
+  transition: 0.4s;
+  -webkit-transition: 0.4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 1.25rem;
+  width: 1.25rem;
+  left: 0.25rem;
+  margin-top: -0.625rem;
+  background-color: white;
+  transition: 0.4s;
+  -webkit-transition: 0.4s;
+  top: 50%;
+}
+
+input:checked + .slider {
+  background-color: #4f46e5;
+}
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+
+input:hover + .slider + input:checked {
+  background-color: #4338ca;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(1.25rem);
+  -ms-transform: translateX(1.25rem);
+  transform: translateX(1.25rem);
+}
+.slider.round {
+  border-radius: 34px;
+}
+.slider.round:before {
+  border-radius: 50%;
+}
 .name {
   width: 30%;
 }
@@ -323,5 +441,9 @@ export default {
 
 .nopointer {
   cursor: not-allowed;
+}
+table.list {
+  table-layout: auto;
+  width: 100%;
 }
 </style>

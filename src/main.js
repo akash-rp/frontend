@@ -14,9 +14,8 @@ import "../node_modules/primevue/resources/themes/tailwind-light/theme.css"; //t
 import "../node_modules/primevue/resources/primevue.min.css"; //core css
 import "../node_modules/primeicons/primeicons.css";
 import Tooltip from "primevue/tooltip";
-import Toast from "vue-toastification";
+import Toast, { TYPE } from "vue-toastification";
 import "vue-toastification/dist/index.css";
-
 const app = createApp(App);
 
 app.config.globalProperties.$axios = axios;
@@ -29,6 +28,36 @@ app.use(Toast, {
   transition: "Vue-Toastification__bounce",
   maxToasts: 20,
   newestOnTop: true,
+  toastDefaults: {
+    [TYPE.ERROR]: {
+      position: "top-right",
+      timeout: 5000,
+      closeOnClick: false,
+      pauseOnFocusLoss: false,
+      pauseOnHover: false,
+      draggable: false,
+      draggablePercent: 0.6,
+      showCloseButtonOnHover: true,
+      hideProgressBar: false,
+      closeButton: "button",
+      icon: true,
+      rtl: false,
+    },
+    [TYPE.SUCCESS]: {
+      position: "top-right",
+      timeout: 5000,
+      closeOnClick: false,
+      pauseOnFocusLoss: false,
+      pauseOnHover: false,
+      draggable: false,
+      draggablePercent: 0.6,
+      showCloseButtonOnHover: true,
+      hideProgressBar: false,
+      closeButton: "button",
+      icon: true,
+      rtl: false,
+    },
+  },
 });
 app.component("Button", Button);
 app.directive("tooltip", Tooltip);

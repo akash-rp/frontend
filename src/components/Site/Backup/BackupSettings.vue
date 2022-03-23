@@ -1,128 +1,105 @@
 <template>
   <section>
-    <button
-      class="bg-blue-700 rounded py-4 px-5 text-white mt-6"
-      @click="takeLocalOndemandBackup"
-    >
-      Take Backup Now
-    </button>
-    <div class="mt-6">
-      <h2 class="font-bold text-2xl">Local Backups</h2>
-      <div class="toggle checkcross flex items-center">
+    <div class="p-5" v-if="Object.keys(backupSettings).length !== 0">
+      <h2 class="font-semibold text-xl">Local Backup</h2>
+      <div class="flex flex-row items-center mt-4">
+        <label for="automatic-backup" class="w-38">Automatic Backup</label>
+        <a-switch
+          v-model:checked="backupSettings['automatic']"
+          checked-children="ON"
+          un-checked-children="OFF"
+          id="automatic-backup"
+        />
+      </div>
+      <!-- <div class="toggle checkcross flex items-center">
         <p class="text-2xl block mr-6 text-gray-700">Automated Backups</p>
         <input
           id="checkcross"
           type="checkbox"
-          v-model="backupSettings.automatic"
+          v-model="backupSettings['automatic']"
         />
         <label class="toggle-item bg-gray-200" for="checkcross">
           <div class="check"></div>
         </label>
+      </div> -->
+      <div class="flex flex-row items-center mt-4">
+        <label class="w-38">Backup Frequency</label>
+        <!-- <div
+            class="custom-select inline-block w-44"
+            :tabindex="tabindex"
+            @blur="open = false"
+          >
+            <div
+              class="selected bg-gray-200"
+              :class="{ open: open }"
+              @click.self="open = !open"
+            >
+              {{ backupSettings.frequency }}
+            </div>
+            <div class="items mt-2" :class="{ selectHide: !open }">
+              <div
+                v-for="(option, i) of backupFrequncy"
+                :key="i"
+                @click="
+                  backupSettings.frequency = option;
+                  open = false;
+                  $emit('input', option);
+                "
+                class="hover:bg-gray-100"
+              >
+                <p>
+                  {{ option }}
+                </p>
+              </div>
+            </div>
+          </div> -->
+        <a-select
+          ref="select"
+          v-model:value="backupSettings['frequency']"
+          style="width: 120px"
+          :options="freqOptions"
+        ></a-select>
       </div>
-      <div class="mt-6">
-        <span class="text-2xl mr-4 text-gray-700 w-52 inline-block"
-          >Backup Frequency</span
+      <div class="flex flex-row items-center mt-4">
+        <span class="w-38">Backup Time</span>
+        <a-select
+          ref="select"
+          v-model:value="backupSettings['time']['hour']"
+          style="width: 70px"
+          :options="this.time.hour"
+          :disabled="backupSettings['frequency'] == 'Hourly'"
         >
-        <div
-          class="custom-select inline-block w-44"
-          :tabindex="tabindex"
-          @blur="open = false"
+          <template #suffixIcon>HH</template>
+        </a-select>
+        <span class="mx-2 text-xl">:</span>
+        <a-select
+          ref="select"
+          v-model:value="backupSettings['time']['minute']"
+          style="width: 70px"
+          :options="this.time.minute"
         >
-          <div
-            class="selected bg-gray-200"
-            :class="{ open: open }"
-            @click.self="open = !open"
-          >
-            {{ backupSettings.frequency }}
-          </div>
-          <div class="items mt-2" :class="{ selectHide: !open }">
-            <div
-              v-for="(option, i) of backupFrequncy"
-              :key="i"
-              @click="
-                backupSettings.frequency = option;
-                open = false;
-                $emit('input', option);
-              "
-              class="hover:bg-gray-100"
-            >
-              <p>
-                {{ option }}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="mt-4">
-          <span class="text-2xl mr-4 text-gray-700 w-52 inline-block"
-            >Backup Time</span
-          >
-          <div
-            class="custom-select inline-block w-24"
-            :tabindex="tabindex"
-            @blur="openHour = false"
-          >
-            <div
-              class="selected bg-gray-200 hour"
-              :class="{ open: open }"
-              @click.self="openHour = !openHour"
-            >
-              {{ backupSettings.time.hour }}
-            </div>
-            <div
-              class="items mt-2 h-40 overflow-auto w-24"
-              :class="{ selectHide: !openHour }"
-            >
-              <div
-                v-for="(option, i) of time['hour']"
-                :key="i"
-                @click="
-                  backupSettings.time.hour = option;
-                  openHour = false;
-                  $emit('input', option);
-                "
-                class="hover:bg-gray-100"
-              >
-                <p>
-                  {{ option }}
-                </p>
-              </div>
-            </div>
-          </div>
-          <span class="mx-2 text-3xl">:</span>
-          <div
-            class="custom-select inline-block w-24"
-            :tabindex="tabindex"
-            @blur="openMinute = false"
-          >
-            <div
-              class="selected bg-gray-200 minute"
-              :class="{ open: open }"
-              @click.self="openMinute = !openMinute"
-            >
-              {{ backupSettings.time.minute }}
-            </div>
-            <div
-              class="items mt-2 h-40 overflow-auto w-24"
-              :class="{ selectHide: !openMinute }"
-            >
-              <div
-                v-for="(option, i) of time['minute']"
-                :key="i"
-                @click="
-                  backupSettings.time.minute = option;
-                  openMinute = false;
-                  $emit('input', option);
-                "
-                class="hover:bg-gray-100"
-              >
-                <p>
-                  {{ option }}
-                </p>
-              </div>
-            </div>
-          </div>
-          <span class="text-2xl text-gray-700 mx-2">UTC</span>
-          <div
+          <template #suffixIcon><div id="suffix">MM</div></template>
+        </a-select>
+        <span class="text-gray-400 mx-2 text-sm">UTC</span>
+        <a-select
+          ref="select"
+          v-model:value="backupSettings['time']['weekday']"
+          style="width: 130px"
+          :options="this.time.day"
+          v-if="backupSettings.frequency == 'Weekly'"
+        >
+          <template #suffixIcon><div id="suffix">Day</div></template>
+        </a-select>
+        <a-select
+          ref="select"
+          v-model:value="backupSettings['time']['monthday']"
+          style="width: 70px"
+          :options="this.time.day"
+          v-if="backupSettings.frequency == 'Monthly'"
+        >
+          <template #suffixIcon><div id="suffix">Day</div></template>
+        </a-select>
+        <!-- <div
             class="custom-select inline-block"
             :class="{
               'w-44': backupSettings.frequency == 'Weekly',
@@ -160,8 +137,8 @@
                 </p>
               </div>
             </div>
-          </div>
-          <div
+          </div> -->
+        <!-- <div
             class="custom-select inline-block"
             :class="{
               'w-24': backupSettings.frequency != 'Weekly',
@@ -199,21 +176,26 @@
                 </p>
               </div>
             </div>
-          </div>
-        </div>
+          </div> -->
       </div>
-      <div>
-        <span class="text-2xl text-gray-700 mr-4 w-52 inline-block mt-6"
-          >Backup Retention</span
-        >
-        <input
-          class="ml-4 px-2 py-4 w-24 border text-xl"
-          id="monthly"
-          type="number"
+      <div class="flex flex-row items-center mt-4">
+        <label class="w-38" for="retention">Retention Period</label>
+        <a-input-number
+          style="width: 60px"
+          id="retention"
+          v-model:value="backupSettings['retention']['time']"
           min="1"
-          v-model="backupSettings.retention.time"
-        />
-        <div
+          :max="maxRetention"
+          class="mr-2"
+        ></a-input-number>
+
+        <a-select
+          ref="select"
+          v-model:value="backupSettings['retention']['type']"
+          style="width: 120px"
+          :options="retOptions"
+        ></a-select>
+        <!-- <div
           class="custom-select inline-block w-44 ml-4"
           :tabindex="tabindex"
           @blur="openRetention = false"
@@ -241,76 +223,103 @@
               </p>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
 
       <button
-        class="bg-blue-700 text-white py-4 px-5 rounded"
+        class="bg-blue-700 text-white py-1 mt-4 px-2 rounded"
         @click="updateBackup"
       >
         Update
       </button>
     </div>
-    <div class="mt-6">
-      <h1 class="font-bold text-2xl">Remote Backup</h1>
-    </div>
   </section>
 </template>
 
 <script>
+import { Switch } from "ant-design-vue";
+import "ant-design-vue/lib/switch/style/index.css";
+import { Select } from "ant-design-vue";
+import "ant-design-vue/lib/select/style/index.css";
+import { Button } from "ant-design-vue";
+import "ant-design-vue/lib/button/style/index.css";
+import { Input } from "ant-design-vue";
+import "ant-design-vue/lib/input/style/index.css";
+import { InputNumber } from "ant-design-vue";
+import "ant-design-vue/lib/input-number/style/index.css";
+import { useToast } from "vue-toastification";
+
 export default {
+  name: "backupSettings",
+  setup() {
+    const toast = useToast();
+    return { toast };
+  },
   data() {
     return {
       tabindex: 1,
       open: false,
-      backupFrequncy: ["Hourly", "Daily", "Weekly", "Monthly"],
+      freqOptions: [
+        { value: "Hourly", label: "Hourly" },
+        { value: "Daily", label: "Daily" },
+        { value: "Weekly", label: "Weekly" },
+        { value: "Monthly", label: "Monthly" },
+      ],
       openMinute: false,
       openHour: false,
       openDay: false,
       time: { hour: [], minute: [], day: [] },
-      oldAutomatic: this.$store.state.currentSite.localbackup.automatic,
+      oldAutomatic: false,
       openRetention: false,
       // retention: ["Day", "Week", "Month"],
-      backupSettings: JSON.parse(
-        JSON.stringify(this.$store.state.currentSite.localbackup)
-      ),
+
+      maxRetention: 30,
+      backupSettings: {},
     };
   },
   created() {
     // this.getBackup();
     this.minute();
     this.hour();
+    this.getSettings();
   },
+
   methods: {
-    updateBackup() {
-      //   console.log(this.siteBackup);
-      let backupType;
-      if (this.oldAutomatic === this.backupSettings.automatic) {
-        backupType = "existing";
-      } else if (this.backupSettings.automatic) {
-        backupType = "enable";
-      } else if (!this.backupSettings.automatic) {
-        backupType = "disable";
+    getSettings() {
+      if (this.$store.state.currentSite.localbackup) {
+        this.oldAutomatic = JSON.parse(
+          JSON.stringify(this.$store.state.currentSite.localbackup.automatic)
+        );
+
+        this.backupSettings = JSON.parse(
+          JSON.stringify(this.$store.state.currentSite.localbackup)
+        );
       }
-      fetch(
-        "http://localhost/site/" +
-          this.$route.params.siteid +
-          "/updatelocalbackup",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            backup: this.backupSettings,
-            type: backupType,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
-        .then((response) => response.json())
+    },
+    updateBackup() {
+      let backupType;
+      let backupSettings = JSON.parse(JSON.stringify(this.backupSettings));
+      if (this.oldAutomatic === backupSettings["automatic"]) {
+        backupType = "existing";
+      } else if (backupSettings["automatic"]) {
+        backupType = "enable";
+        // backupSettings["automatic"] = this.oldAutomatic;
+      } else if (!backupSettings["automatic"]) {
+        backupType = "disable";
+        // backupSettings["automatic"] = this.oldAutomatic;
+      }
+      this.$axios
+        .post("/site/" + this.$route.params.siteid + "/updatelocalbackup", {
+          backup: backupSettings,
+          type: backupType,
+        })
         .then(() => {
-          this.$store.commit("updateBackup", this.backupSettings);
-          this.oldAutomatic = this.backupSettings.automatic;
+          this.$store.commit("updateBackup", backupSettings);
+          this.toast.success("Backup settings updated");
+        })
+        .catch(() => {
+          console.log("failed");
+          this.toast.error("Failed to update backup settings");
         });
     },
     takeLocalOndemandBackup() {
@@ -321,25 +330,35 @@ export default {
       );
     },
     minute() {
-      for (let i = 0; i < 61; i++) {
+      for (let i = 0; i < 60; i++) {
         let num = i.toLocaleString("en-US", {
           minimumIntegerDigits: 2,
           useGrouping: false,
         });
-        this.time.minute.push(num);
+        this.time.minute.push({ value: num, label: num });
       }
     },
     hour() {
-      for (let i = 0; i < 25; i++) {
+      for (let i = 0; i < 24; i++) {
         let num = i.toLocaleString("en-US", {
           minimumIntegerDigits: 2,
           useGrouping: false,
         });
-        this.time.hour.push(num);
+        this.time.hour.push({ value: num, label: num });
       }
     },
   },
   watch: {
+    "backupSettings.retention.type"() {
+      if (this.backupSettings.retention.type == "Day") {
+        this.maxRetention = 30;
+      } else if (this.backupSettings.retention.type == "Week") {
+        this.maxRetention = 8;
+      } else {
+        this.maxRetention = 12;
+      }
+    },
+
     "backupSettings.frequency"() {
       if (
         this.backupSettings.frequency == "Daily" ||
@@ -350,13 +369,13 @@ export default {
       if (this.backupSettings.frequency == "Weekly") {
         this.backupSettings.retention.type = "Week";
         this.time.day = [
-          "Monday",
-          "Tuesday",
-          "Wednesday",
-          "Thursday",
-          "Friday",
-          "Saturday",
-          "Sunday",
+          { value: "Monday", label: "Monday" },
+          { value: "Tuesday", label: "Tuesday" },
+          { value: "Wednesday", label: "Wednesday" },
+          { value: "Thursday", label: "Thursday" },
+          { value: "Friday", label: "Friday" },
+          { value: "Saturday", label: "Saturday" },
+          { value: "Sunday", label: "Sunday" },
         ];
       }
       if (this.backupSettings.frequency == "Monthly") {
@@ -367,36 +386,61 @@ export default {
             minimumIntegerDigits: 2,
             useGrouping: false,
           });
-          this.time.day.push(num);
+          this.time.day.push({ vale: num, label: num });
         }
       }
     },
     automatic() {
       console.log("changed automatic");
     },
+    "$store.state.currentSite.localbackup": {
+      deep: true,
+      handler(data) {
+        this.oldAutomatic = JSON.parse(JSON.stringify(data.automatic));
+        this.backupSettings = JSON.parse(JSON.stringify(data));
+      },
+    },
   },
   computed: {
-    // siteBackup() {
-    //   return this.$store.state.currentSite.localbackup;
+    // backupSettings() {
+    //   return JSON.parse(
+    //     JSON.stringify(this.$store.state.currentSite.localbackup)
+    //   );
     // },
-    retention() {
+    retOptions() {
       if (
         this.backupSettings.frequency == "Daily" ||
         this.backupSettings.frequency == "Hourly"
       ) {
-        return ["Day", "Week", "Month"];
+        return [
+          { value: "Day", label: "Day" },
+          { value: "Week", label: "Week" },
+          { value: "Month", label: "Month" },
+        ];
       }
       if (this.backupSettings.frequency == "Weekly") {
-        return ["Week", "Month"];
+        return [
+          { value: "Week", label: "Week" },
+          { value: "Month", label: "Month" },
+        ];
       }
       if (this.backupSettings.frequency == "Monthly") {
-        return ["Month"];
+        return [{ value: "Month", label: "Month" }];
       }
       return [];
     },
+    // backupSettings() {
+    //   this.oldAutomatic = this.$store.state.currentSite.localbackup.automatic;
+    //   return this.$store.state.currentSite.localbackup;
+    // },
   },
-  beforeUnmount() {
-    console.log("unmounting");
+
+  components: {
+    ASwitch: Switch,
+    ASelect: Select,
+    AButton: Button,
+    AInput: Input,
+    AInputNumber: InputNumber,
   },
 };
 </script>
@@ -517,5 +561,13 @@ label.toggle-item {
   top: -23px;
   color: gray;
   left: 0;
+}
+
+#suffix {
+  margin-left: -4px;
+}
+
+#automatic-backup {
+  width: 52px;
 }
 </style>

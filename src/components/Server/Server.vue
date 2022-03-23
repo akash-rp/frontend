@@ -61,20 +61,7 @@ export default {
           this.$store.commit("setCurrentServer", res.data);
         })
         .catch(() => {
-          this.toast.error("Failed to fetch Resource Usage", {
-            position: "top-right",
-            timeout: 5041,
-            closeOnClick: false,
-            pauseOnFocusLoss: false,
-            pauseOnHover: false,
-            draggable: false,
-            draggablePercent: 0.6,
-            showCloseButtonOnHover: true,
-            hideProgressBar: true,
-            closeButton: "button",
-            icon: true,
-            rtl: false,
-          });
+          this.toast.error("Failed to fetch Resource Usage");
         });
     },
   },

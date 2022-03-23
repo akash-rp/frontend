@@ -1,0 +1,97 @@
+      <DataTable
+        :value="site.domain.primary"
+        class="p-datatable-lg"
+        :rowHover="true"
+        @rowSelect="onSiteRowSelect"
+        v-if="site.ip !== ''"
+      >
+        <template #empty>
+          <div class="">No Sites available</div>
+        </template>
+
+        <Column
+          field="url"
+          header="Domain Name"
+          headerStyle="background-color:#eff3f8;"
+          bodyClass="font-bold "
+        >
+        </Column>
+
+        <Column
+          field="type"
+          header="Type"
+          headerStyle="background-color:#eff3f8;"
+        >
+          <template #body>
+            <tag value="Primary"></tag>
+          </template>
+        </Column>
+
+        <Column
+          field="routing"
+          header="Routing"
+          headerStyle="background-color:#eff3f8;"
+        >
+          <template #body="{ data }">
+            <div
+              class="border-2 border-indigo-700 w-fit px-2 -my-2 rounded text-indigo-700 font-medium"
+              v-if="data.routing === 'none'"
+              @click="showRouting(data.url, data.routing, data.subdomain)"
+            >
+              none
+            </div>
+          </template>
+        </Column>
+        <Column
+          field="wildcard"
+          header="Wildcard"
+          headerStyle="background-color:#eff3f8;"
+        >
+          <template #body="{ data }">
+            <InputSwitch
+              v-model="site.domain.primary.url"
+              class="ml-1"
+              @click="showWildcard(data.url, data.wildcard, data.isSubDomain)"
+            />
+          </template>
+        </Column>
+        <Column headerStyle="background-color:#eff3f8;"> </Column>
+      </DataTable>
+      <DataTable
+        :value="site.domain.alias"
+        class="p-datatable-lg"
+        :rowHover="true"
+        @rowSelect="onSiteRowSelect"
+        v-if="site.ip !== ''"
+      >
+        <Column field="url" headerStyle="display:none;" bodyClass="font-bold ">
+        </Column>
+
+        <Column field="type" headerStyle="display:none;">
+          <template #body>
+            <tag value="Primary"></tag>
+          </template>
+        </Column>
+
+        <Column field="routing" headerStyle="display:none;">
+          <template #body="{ data }">
+            <div
+              class="border-2 border-indigo-700 w-fit px-2 -my-2 rounded text-indigo-700 font-medium"
+              v-if="data.routing === 'none'"
+              @click="showRouting(data.url, data.routing, data.subdomain)"
+            >
+              none
+            </div>
+          </template>
+        </Column>
+        <Column field="wildcard" headerStyle="display:none;">
+          <template #body="{ data }">
+            <InputSwitch
+              v-model="site.domain.primary.url"
+              class="ml-1"
+              @click="showWildcard(data.url, data.wildcard, data.isSubDomain)"
+            />
+          </template>
+        </Column>
+        <Column headerStyle="display:none;"> </Column>
+      </DataTable>

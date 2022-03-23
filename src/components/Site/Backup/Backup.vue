@@ -1,8 +1,14 @@
 <template>
   <div class="main_bg">
     <h1 class="header">Backup</h1>
-    <div class="mt-4">
-      <router-link
+    <div class="">
+      <tab-menu :model="items" />
+      <router-view v-slot="{ Component }">
+        <keep-alive exclude="backupSettings">
+          <component :is="Component" />
+        </keep-alive>
+      </router-view>
+      <!-- <router-link
         class="options mr-4"
         id="backup"
         :to="'/site/' + this.$route.params.siteid + '/backup/'"
@@ -13,16 +19,37 @@
         id="backupSettings"
         :to="'/site/' + this.$route.params.siteid + '/backup/' + 'settings'"
         >Settings</router-link
-      >
+      > -->
     </div>
 
-    <router-view v-slot="{ Component }">
+    <!-- <router-view v-slot="{ Component }">
       <keep-alive include="backup">
         <component :is="Component" />
       </keep-alive>
-    </router-view>
+    </router-view> -->
   </div>
 </template>
+
+<script>
+import TabMenu from "primevue/tabmenu";
+export default {
+  components: { TabMenu },
+  data() {
+    return {
+      items: [
+        {
+          label: "Local Backup",
+          to: "/site/" + this.$route.params.siteid + "/backup/",
+        },
+        {
+          label: "Settings",
+          to: "/site/" + this.$route.params.siteid + "/backup/settings",
+        },
+      ],
+    };
+  },
+};
+</script>
 
 <style>
 #backup.active {
@@ -30,5 +57,11 @@
 }
 #backupSettings.active {
   border-bottom: 2px solid blue;
+}
+.p-tabmenu
+  .p-tabmenu-nav
+  .p-tabmenuitem
+  .p-menuitem-link:not(.p-disabled):focus {
+  box-shadow: none !important;
 }
 </style>

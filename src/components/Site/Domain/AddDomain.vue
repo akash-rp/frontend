@@ -1,12 +1,12 @@
 <template>
   <div
-    class="w-screen h-screen flex justify-center items-center bg-gray-900 bg-opacity-50 top-0 left-0 fixed rounded"
+    class="w-screen h-screen flex justify-center items-center bg-gray-900 bg-opacity-50 top-0 left-0 fixed rounded z-50"
     @keydown.esc="$emit('close')"
     tabindex="0"
     ref="addDomain"
     @click.self="$emit('close')"
   >
-    <div class="flex flex-col bg-white  w-1/2 rounded">
+    <div class="flex flex-col bg-white w-1/2 rounded">
       <h1 class="text-4xl font-bold p-10 border-b">Add New Domain</h1>
       <div class="flex flex-col mt-5 px-10">
         <label for="url" class="text-2xl font-semibold mb-3">Domain Name</label>
@@ -36,7 +36,7 @@
             value="redirect"
             v-model="type"
           />
-          <label for="redirect" class="text-2xl ">Redirect</label>
+          <label for="redirect" class="text-2xl">Redirect</label>
         </div>
       </div>
       <div class="flex flex-row justify-end mb-5">

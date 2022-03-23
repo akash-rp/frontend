@@ -1,6 +1,6 @@
 <template>
-  <div class="mt-2">
-    <p
+  <div class="mt-5 ml-5 flex flex-row justify-between items-center">
+    <!-- <p
       class="inline-block p-4 border  text-xl  rounded-l-md cursor-pointer"
       :class="{
         'text-white bg-indigo-700': mode == 'automatic',
@@ -19,9 +19,70 @@
       @click="mode = 'ondemand'"
     >
       Manual
-    </p>
+    </p> -->
+    <SelectButton
+      v-model="mode"
+      :options="options"
+      optionLabel="name"
+      optionValue="value"
+    />
+    <button
+      class="bg-blue-700 rounded py-2 px-2 text-white mr-5"
+      @click="takeLocalOndemandBackup"
+      v-if="mode == 'ondemand'"
+    >
+      Take Backup
+    </button>
   </div>
-  <table class="sortable mt-4 w-full">
+  <DataTable
+    :value="showList"
+    class="p-datatable-lg mt-5"
+    :rowHover="true"
+    dataKey="siteId"
+    selectionMode="single"
+    @rowSelect="onSiteRowSelect"
+    paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
+    :rowsPerPageOptions="[2, 10, 20, 50]"
+    responsiveLayout="scroll"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
+    :paginator="showList.length > 10"
+    :rows="10"
+  >
+    <template #empty>
+      <div class="">No Backups Available</div>
+    </template>
+
+    <Column
+      field="startTime"
+      header="Created"
+      headerStyle="background-color:#eff3f8;"
+    >
+      <template #body="{ data }">
+        {{ getdate(data.startTime) }}
+      </template>
+    </Column>
+    <Column
+      field="size"
+      header="Backup Size"
+      headerStyle="background-color:#eff3f8;"
+      bodyClass=""
+    >
+      <template #body="{ data }">
+        {{ formatSize(data.rootEntry.summ.size) }}
+      </template>
+    </Column>
+    <Column headerStyle="background-color:#eff3f8;">
+      <template #body>
+        <div
+          class="border w-min px-4 py-2 cursor-pointer rounded text-gray-700 hover:text-indigo-700 hover:border-indigo-700"
+          @click="initRestore(getdate(one.startTime), one.rootEntry.obj, mode)"
+        >
+          Restore
+        </div>
+      </template>
+    </Column>
+  </DataTable>
+  <!-- <table class="sortable mt-4 w-full">
     <thead class="">
       <tr class="bg-gray-100">
         <th
@@ -55,7 +116,7 @@
           {{ formatSize(one.rootEntry.summ.size) }}
         </td>
         <td
-          class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xl whitespace-nowrap p-4 "
+          class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xl whitespace-nowrap p-4"
         >
           <div
             class="border w-min px-4 py-2 cursor-pointer rounded text-gray-700 hover:text-indigo-700 hover:border-indigo-700"
@@ -68,8 +129,8 @@
         </td>
       </tr>
     </tbody>
-  </table>
-  <div class="mt-4">
+  </table> -->
+  <!-- <div class="mt-4">
     <p
       v-for="(i, n) in listLength"
       :key="i"
@@ -82,7 +143,7 @@
     >
       {{ i }}
     </p>
-  </div>
+  </div> -->
   <teleport to="body">
     <div
       class="w-screen h-screen flex justify-center items-center bg-gray-900 bg-opacity-50 top-0 left-0 fixed rounded"
@@ -92,7 +153,7 @@
       @click.self="modalOpen = false"
       v-if="modalOpen"
     >
-      <div class="flex flex-col bg-white  w-1/2 rounded">
+      <div class="flex flex-col bg-white w-1/2 rounded">
         <h1 class="text-4xl font-bold p-10 border-b text-indigo-700">
           Backup Restore
         </h1>
@@ -125,7 +186,7 @@
               value="db"
               v-model="restore.type"
             />
-            <label for="db" class="text-2xl ">Database</label>
+            <label for="db" class="text-2xl">Database</label>
           </div>
           <div>
             <input
@@ -135,7 +196,7 @@
               value="both"
               v-model="restore.type"
             />
-            <label for="both" class="text-2xl ">Both</label>
+            <label for="both" class="text-2xl">Both</label>
           </div>
         </div>
         <div class="px-10 py-4 bg-gray-100 my-4">
@@ -161,13 +222,16 @@
 </template>
 
 <script>
+import SelectButton from "primevue/selectbutton";
+import DataTable from "primevue/datatable";
+import Column from "primevue/column";
 export default {
+  components: { SelectButton, DataTable, Column },
   name: "backup",
   data() {
     return {
-      autoList: [],
-      autoListPagination: {},
-      currentPage: 0,
+      backupList: {},
+      showList: [],
       modalOpen: false,
       restore: {
         id: "",
@@ -178,10 +242,21 @@ export default {
         mode: "",
       },
       mode: "automatic",
+      options: [
+        {
+          name: "Automatic",
+          value: "automatic",
+        },
+        {
+          name: "Ondemand",
+          value: "ondemand",
+        },
+      ],
     };
   },
   created() {
     this.getLocalBackups();
+    // this.showList = this.backupList.automatic;
   },
   methods: {
     restoreBackup() {
@@ -214,41 +289,20 @@ export default {
         });
     },
     getLocalBackups() {
-      fetch(
-        "http://localhost/site/" +
-          this.$route.params.siteid +
-          "/localbackuplist/" +
-          this.mode,
-        {
-          method: "GET",
-        }
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          if (!data.error) {
-            this.autoList = JSON.parse(data);
-            this.autoList.sort(function(a, b) {
-              return b.startTime.localeCompare(a.startTime);
-            });
-            this.autoListPagination = {};
-            this.currentPage = 0;
-            let listLength = this.autoList.length;
-            let index = 0;
-            for (let i = 0; listLength > 0; ) {
-              console.log(listLength);
-              if (listLength >= 10) {
-                this.autoListPagination[index] = this.autoList.slice(i, i + 10);
-                listLength = listLength - 10;
-              } else {
-                this.autoListPagination[index] = this.autoList.slice(
-                  i,
-                  i + listLength
-                );
-                listLength = 0;
-              }
-              index++;
-              i = i + 10;
-            }
+      this.$axios
+        .get(
+          "/site/" + this.$route.params.siteid + "/localbackuplist/automatic"
+        )
+        .then((res) => {
+          this.backupList = res.data;
+          this.backupList.automatic.sort(function (a, b) {
+            return b.startTime.localeCompare(a.startTime);
+          });
+          this.backupList.ondemand.sort(function (a, b) {
+            return b.startTime.localeCompare(a.startTime);
+          });
+          if (this.mode == "automatic") {
+            this.showList = this.backupList.automatic;
           }
         });
     },
@@ -275,16 +329,15 @@ export default {
       this.restore.date = date;
       this.restore.mode = mode;
     },
+    takeLocalOndemandBackup() {
+      fetch(
+        "http://localhost/site/" +
+          this.$route.params.siteid +
+          "/localondemandbackup"
+      );
+    },
   },
 
-  computed: {
-    listLength() {
-      return Object.keys(this.autoListPagination).length;
-    },
-    getlist() {
-      return this.autoListPagination[this.currentPage];
-    },
-  },
   watch: {
     "restore.type"() {
       if (this.restore.type == "both") {
@@ -297,10 +350,27 @@ export default {
       }
     },
     mode() {
+      if (this.mode == "automatic") {
+        this.showList = this.backupList.automatic;
+      } else {
+        this.showList = this.backupList.ondemand;
+      }
       this.getLocalBackups();
     },
   },
 };
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+:deep(.p-button:focus) {
+  box-shadow: none !important;
+}
+
+.p-selectbutton {
+  box-shadow: none;
+}
+
+:deep(.pi) {
+  line-height: 0 !important;
+}
+</style>

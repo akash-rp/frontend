@@ -241,20 +241,7 @@ export default {
         })
         .catch(() => {
           this.fetchError = true;
-          this.toast.error("Failed to fetch Server Health", {
-            position: "top-right",
-            timeout: 5000,
-            closeOnClick: false,
-            pauseOnFocusLoss: false,
-            pauseOnHover: false,
-            draggable: false,
-            draggablePercent: 0.6,
-            showCloseButtonOnHover: true,
-            hideProgressBar: true,
-            closeButton: "button",
-            icon: true,
-            rtl: false,
-          });
+          this.toast.error("Failed to fetch Server Health");
         });
     },
   },

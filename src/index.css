@@ -52,4 +52,7 @@
   .header {
     @apply p-5 text-xl font-semibold rounded-t;
   }
+  .cell {
+    @apply p-5;
+  }
 }

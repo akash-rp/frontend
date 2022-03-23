@@ -136,20 +136,7 @@ export default {
           this.services = res.data;
         })
         .catch(() => {
-          this.toast.error("Failed to fetch services", {
-            position: "top-right",
-            timeout: 5000,
-            closeOnClick: false,
-            pauseOnFocusLoss: false,
-            pauseOnHover: false,
-            draggable: false,
-            draggablePercent: 0.6,
-            showCloseButtonOnHover: true,
-            hideProgressBar: false,
-            closeButton: "button",
-            icon: true,
-            rtl: false,
-          });
+          this.toast.error("Failed to fetch services");
         });
     },
     controlService(data, control) {
@@ -164,36 +151,10 @@ export default {
         )
         .then((res) => {
           this.services = res.data;
-          this.toast.success(data.service + " " + control + "ed", {
-            position: "top-right",
-            timeout: 5000,
-            closeOnClick: false,
-            pauseOnFocusLoss: false,
-            pauseOnHover: false,
-            draggable: false,
-            draggablePercent: 0.6,
-            showCloseButtonOnHover: true,
-            hideProgressBar: false,
-            closeButton: "button",
-            icon: true,
-            rtl: false,
-          });
+          this.toast.success(data.service + " " + control + "ed");
         })
         .catch(() => {
-          this.toast.error("Failed to " + control + " " + data.service, {
-            position: "top-right",
-            timeout: 5000,
-            closeOnClick: false,
-            pauseOnFocusLoss: false,
-            pauseOnHover: false,
-            draggable: false,
-            draggablePercent: 0.6,
-            showCloseButtonOnHover: true,
-            hideProgressBar: false,
-            closeButton: "button",
-            icon: true,
-            rtl: false,
-          });
+          this.toast.error("Failed to " + control + " " + data.service);
         });
     },
   },

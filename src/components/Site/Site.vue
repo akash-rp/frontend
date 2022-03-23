@@ -59,7 +59,7 @@ export default {
     getSite() {
       fetch("http://localhost/site/" + this.$route.params.siteid)
         .then((response) => response.json())
-        .then((data) => this.$store.commit("setCurrentSite", data[0]));
+        .then((data) => this.$store.commit("setCurrentSite", data));
     },
     domainAdd(data) {
       this.site.domain = data.domain;
