@@ -92,12 +92,10 @@
           bodyClass="w-[5%] text-center"
         >
           <template #body="{ data }">
-            <tag v-if="data.type == 'live'" value="Live"></tag>
-            <tag
-              v-if="data.type == 'staging'"
-              value="staging"
-              severity="warning"
-            ></tag>
+            <tag v-if="data.type == 'live'">Live</tag>
+            <tag v-if="data.type == 'staging'" severity="warning" class="p-1"
+              >Staging</tag
+            >
           </template>
         </Column>
       </DataTable>
@@ -144,11 +142,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.p-tag {
-  margin-left: 25%;
-  // display: table;
-  // margin: 0 auto;
-}
+
 :deep(.p-datatable) {
   .p-datatable-header {
     background-color: white;

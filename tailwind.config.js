@@ -5,7 +5,11 @@ module.exports = {
       width: {
         38: "9.5rem",
       },
+      colors: {
+        default: "#eff3f8",
+      },
     },
   },
   plugins: [],
+  important: true,
 };

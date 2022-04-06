@@ -18,6 +18,7 @@ import BackupListLocal from "./components/Site/Backup/LocalBackupList.vue";
 import Staging from "./components/Site/Staging/Staging.vue";
 import ServerHealth from "./components/Server/Health.vue";
 import Services from "./components/Server/Services.vue";
+import Firewall from "./components/Site/Firewall/Firewall.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -87,11 +88,15 @@ const router = createRouter({
           path: "staging",
           component: Staging,
         },
+        {
+          path: "firewall",
+          component: Firewall,
+        },
       ],
     },
   ],
   linkExactActiveClass: "active",
-  linkActiveClass: "",
+  linkActiveClass: "link-active",
 });
 
 router.beforeEach((to) => {

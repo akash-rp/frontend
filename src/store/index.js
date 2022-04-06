@@ -59,6 +59,9 @@ const store = createStore({
     addMetrics(state, value) {
       state.cpuMetrics = [{ data: value }];
     },
+    set7G(state, data) {
+      state.currentSite.firewall.sevenG = data;
+    },
   },
   actions: {
     getSites({ commit }, route) {

@@ -2,6 +2,7 @@
   <div class="flex flex-col mr-5 w-32 shrink-0">
     <router-link
       class="options"
+      :class="{ backup: item.name == 'Backup' }"
       v-for="item of menuItems"
       v-bind:key="item.name"
       :to="'/' + type + '/' + id + item.to"
@@ -26,4 +27,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.link-active.backup {
+  font-weight: bold;
+}
+</style>

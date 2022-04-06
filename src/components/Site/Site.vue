@@ -37,7 +37,8 @@ export default {
         { name: "Summary", to: "" },
         { name: "Domains", to: "/domains" },
         { name: "PHP", to: "/php" },
-        { name: "Backup", to: "/backup" },
+        { name: "Firewall", to: "/firewall" },
+        { name: "Backup", to: "/backup", class: "backup" },
         { name: "Staging", to: "/staging" },
       ],
     };

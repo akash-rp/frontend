@@ -8,6 +8,8 @@ import PrimeVue from "primevue/config";
 import Button from "primevue/button";
 import Ripple from "primevue/ripple";
 import axios from "./axios-instance";
+import Antd from "ant-design-vue";
+import "ant-design-vue/dist/antd.css";
 
 import "./index.css";
 import "../node_modules/primevue/resources/themes/tailwind-light/theme.css"; //theme
@@ -16,9 +18,12 @@ import "../node_modules/primeicons/primeicons.css";
 import Tooltip from "primevue/tooltip";
 import Toast, { TYPE } from "vue-toastification";
 import "vue-toastification/dist/index.css";
-const app = createApp(App);
+import { useToast } from "vue-toastification";
+
+const app = createApp(App).use(Antd);
 
 app.config.globalProperties.$axios = axios;
+app.config.globalProperties.$toast = useToast();
 
 app.use(router);
 app.use(store);

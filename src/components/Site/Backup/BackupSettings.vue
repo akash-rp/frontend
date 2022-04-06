@@ -69,7 +69,7 @@
           :options="this.time.hour"
           :disabled="backupSettings['frequency'] == 'Hourly'"
         >
-          <template #suffixIcon>HH</template>
+          <template #suffixIcon><div id="suffix">HH</div></template>
         </a-select>
         <span class="mx-2 text-xl">:</span>
         <a-select
@@ -237,24 +237,21 @@
 </template>
 
 <script>
-import { Switch } from "ant-design-vue";
+// import { Switch } from "ant-design-vue";
 import "ant-design-vue/lib/switch/style/index.css";
 import { Select } from "ant-design-vue";
 import "ant-design-vue/lib/select/style/index.css";
-import { Button } from "ant-design-vue";
+// import { Button } from "ant-design-vue";
 import "ant-design-vue/lib/button/style/index.css";
-import { Input } from "ant-design-vue";
+// import { Input } from "ant-design-vue";
 import "ant-design-vue/lib/input/style/index.css";
-import { InputNumber } from "ant-design-vue";
+// import { InputNumber } from "ant-design-vue";
 import "ant-design-vue/lib/input-number/style/index.css";
-import { useToast } from "vue-toastification";
+// import { useToast } from "vue-toastification";
 
 export default {
   name: "backupSettings",
-  setup() {
-    const toast = useToast();
-    return { toast };
-  },
+
   data() {
     return {
       tabindex: 1,
@@ -322,13 +319,7 @@ export default {
           this.toast.error("Failed to update backup settings");
         });
     },
-    takeLocalOndemandBackup() {
-      fetch(
-        "http://localhost/site/" +
-          this.$route.params.siteid +
-          "/localondemandbackup"
-      );
-    },
+
     minute() {
       for (let i = 0; i < 60; i++) {
         let num = i.toLocaleString("en-US", {
@@ -436,11 +427,11 @@ export default {
   },
 
   components: {
-    ASwitch: Switch,
+    // ASwitch: Switch,
     ASelect: Select,
-    AButton: Button,
-    AInput: Input,
-    AInputNumber: InputNumber,
+    // AButton: Button,
+    // AInput: Input,
+    // AInputNumber: InputNumber,
   },
 };
 </script>
@@ -455,119 +446,21 @@ export default {
   }
 }
 
-#checkcross {
-  //   height: 40px;
-  //   left: 0;
-  //   opacity: 0;
-  //   position: absolute;
-  //   top: 0;
-  //   width: 40px;
-  display: none;
-}
-
 // .toggle {
 //   position: relative;
 //   display: block;
 // }
 
-label.toggle-item {
-  width: 7em;
-  height: 3em;
-  display: inline-block;
-  border-radius: 50px;
-  position: relative;
-  transition: all 0.3s ease;
-  transform-origin: 20% center;
-  cursor: pointer;
-  &:before {
-    display: block;
-    transition: all 0.2s ease;
-    width: 2.3em;
-    height: 2.3em;
-    top: 0.25em;
-    left: 0.25em;
-    border-radius: 2em;
-    border: 2px solid #88cf8f;
-    transition: 0.3s ease;
-  }
-}
-
-.checkcross {
-  label:before {
-    content: none;
-  }
-  .check {
-    border-radius: 50%;
-    width: 2.5em;
-    height: 2.5em;
-    position: absolute;
-    background: #c34a4a;
-
-    transition: 0.4s ease;
-    top: 2.5px;
-    &:before,
-    &:after {
-      height: 3px;
-      border-radius: 10px;
-      background: #fff;
-      transition: 0.4s ease;
-    }
-
-    &:before {
-      width: 20px;
-      transform: rotate(-45deg) translate(-6px, 9px);
-    }
-    &:after {
-      width: 20px;
-      transform: rotate(45deg) translate(9px, 6px);
-    }
-    left: 2.5px;
-  }
-}
-
-#checkcross:checked + label {
-  .check {
-    transform: rotate(360deg);
-    background: #8bc34a;
-
-    &:before {
-      width: 14px;
-      transform: rotate(-45deg) translate(-3px, 14px);
-    }
-    &:after {
-      width: 10px;
-      transform: rotate(45deg) translate(12px, 8px);
-    }
-    left: 43px;
-  }
-}
-
-.minute::before {
-  content: "Minute";
-  top: -23px;
-  color: gray;
-  left: 0;
-}
-
-.hour::before {
-  content: "Hour";
-  top: -23px;
-  color: gray;
-  left: 0;
-}
-
-.day::before {
-  content: "Day";
-  top: -23px;
-  color: gray;
-  left: 0;
-}
-
 #suffix {
-  margin-left: -4px;
+  margin-left: -4px !important;
+  font-size: 12px !important;
 }
 
 #automatic-backup {
   width: 52px;
+}
+
+.ant-switch-inner {
+  font-size: 12px !important;
 }
 </style>

@@ -272,12 +272,8 @@
           bodyClass="w-[5%] text-center"
         >
           <template #body="{ data }">
-            <tag v-if="data.type == 'live'" value="Live"></tag>
-            <tag
-              v-if="data.type == 'staging'"
-              value="staging"
-              severity="warning"
-            ></tag>
+            <tag v-if="data.type == 'live'">Live</tag>
+            <tag v-if="data.type == 'staging'" severity="warning">Staging</tag>
           </template>
         </Column>
       </DataTable>

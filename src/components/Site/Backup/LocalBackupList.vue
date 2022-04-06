@@ -1,25 +1,5 @@
 <template>
   <div class="mt-5 ml-5 flex flex-row justify-between items-center">
-    <!-- <p
-      class="inline-block p-4 border  text-xl  rounded-l-md cursor-pointer"
-      :class="{
-        'text-white bg-indigo-700': mode == 'automatic',
-        'hover:bg-gray-100': mode != 'automatic',
-      }"
-      @click="mode = 'automatic'"
-    >
-      Automatic
-    </p>
-    <p
-      class="inline-block p-4 border border-l-0 text-xl rounded-r-md cursor-pointer "
-      :class="{
-        'text-white bg-indigo-700': mode == 'ondemand',
-        'hover:bg-gray-100': mode != 'ondemand',
-      }"
-      @click="mode = 'ondemand'"
-    >
-      Manual
-    </p> -->
     <SelectButton
       v-model="mode"
       :options="options"
@@ -40,7 +20,6 @@
     :rowHover="true"
     dataKey="siteId"
     selectionMode="single"
-    @rowSelect="onSiteRowSelect"
     paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown"
     :rowsPerPageOptions="[2, 10, 20, 50]"
     responsiveLayout="scroll"
@@ -82,68 +61,7 @@
       </template>
     </Column>
   </DataTable>
-  <!-- <table class="sortable mt-4 w-full">
-    <thead class="">
-      <tr class="bg-gray-100">
-        <th
-          class="px-6 align-middle border border-solid py-3 text-xl uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left text-gray-500 w-8/12"
-        >
-          Created
-        </th>
 
-        <th
-          class="px-6 align-middle border border-solid py-3 text-xl uppercase border-l-0 border-r-0 font-semibold text-left text-gray-500"
-        >
-          Size
-        </th>
-        <th class="w-40"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        v-for="one in getlist"
-        :key="one.id"
-        class="border-b hover:bg-gray-100"
-      >
-        <td
-          class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xl whitespace-nowrap p-4 w-80"
-        >
-          {{ getdate(one.startTime) }}
-        </td>
-        <td
-          class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xl whitespace-nowrap p-4"
-        >
-          {{ formatSize(one.rootEntry.summ.size) }}
-        </td>
-        <td
-          class="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xl whitespace-nowrap p-4"
-        >
-          <div
-            class="border w-min px-4 py-2 cursor-pointer rounded text-gray-700 hover:text-indigo-700 hover:border-indigo-700"
-            @click="
-              initRestore(getdate(one.startTime), one.rootEntry.obj, mode)
-            "
-          >
-            Restore
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table> -->
-  <!-- <div class="mt-4">
-    <p
-      v-for="(i, n) in listLength"
-      :key="i"
-      class="inline-block mr-2 text-xl m-4 border p-4 cursor-pointer"
-      :class="{
-        'bg-indigo-700 text-white': n == currentPage,
-        'hover:bg-gray-100': n != currentPage,
-      }"
-      @click="currentPage = n"
-    >
-      {{ i }}
-    </p>
-  </div> -->
   <teleport to="body">
     <div
       class="w-screen h-screen flex justify-center items-center bg-gray-900 bg-opacity-50 top-0 left-0 fixed rounded"
@@ -230,7 +148,7 @@ export default {
   name: "backup",
   data() {
     return {
-      backupList: {},
+      backupList: { automatic: [], ondemand: [] },
       showList: [],
       modalOpen: false,
       restore: {
@@ -248,7 +166,7 @@ export default {
           value: "automatic",
         },
         {
-          name: "Ondemand",
+          name: "Manual",
           value: "ondemand",
         },
       ],
@@ -330,11 +248,17 @@ export default {
       this.restore.mode = mode;
     },
     takeLocalOndemandBackup() {
-      fetch(
-        "http://localhost/site/" +
-          this.$route.params.siteid +
-          "/localondemandbackup"
-      );
+      this.$axios
+        .get("site/" + this.$route.params.siteid + "/localondemandbackup")
+        .then((res) => {
+          if (typeof res.data !== String) {
+            this.backupList = res.data;
+          }
+          this.$toast.success("Created ondemand backup");
+        })
+        .catch(() => {
+          this.$toast.error("Failed to create ondemand backup");
+        });
     },
   },
 
@@ -356,6 +280,22 @@ export default {
         this.showList = this.backupList.ondemand;
       }
       this.getLocalBackups();
+    },
+    backupList: {
+      deep: true,
+      handler() {
+        this.backupList.automatic.sort(function (a, b) {
+          return b.startTime.localeCompare(a.startTime);
+        });
+        this.backupList.ondemand.sort(function (a, b) {
+          return b.startTime.localeCompare(a.startTime);
+        });
+        if (this.mode == "automatic") {
+          this.showList = this.backupList.automatic;
+        } else {
+          this.showList = this.backupList.ondemand;
+        }
+      },
     },
   },
 };

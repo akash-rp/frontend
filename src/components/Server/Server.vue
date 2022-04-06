@@ -34,6 +34,7 @@ export default {
         { name: "Sites", to: "/sites" },
         { name: "Server Health", to: "/health" },
         { name: "Services", to: "/services" },
+        { name: "Security", to: "/security" },
       ],
     };
   },

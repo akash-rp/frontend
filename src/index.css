@@ -50,9 +50,16 @@
     @apply bg-indigo-700 rounded;
   }
   .header {
-    @apply p-5 text-xl font-semibold rounded-t;
+    @apply p-5 !text-xl font-semibold rounded-t;
   }
   .cell {
     @apply p-5;
+  }
+  .ant-modal-header .ant-modal-title {
+    @apply text-xl font-bold;
+  }
+
+  .input {
+    @apply w-1/2 p-1 border hover:border-indigo-700 focus:outline-indigo-700 rounded border-gray-300;
   }
 }
