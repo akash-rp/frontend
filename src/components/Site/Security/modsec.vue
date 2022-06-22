@@ -39,8 +39,7 @@
         :disabled="!enabled"
       >
         <template #mark="{ label }">
-          >
-          <template>{{ label }}</template>
+          {{ label }}
         </template>
       </a-slider>
     </div>
@@ -59,8 +58,7 @@
           :disabled="!enabled"
         >
           <template #mark="{ label }">
-            >
-            <template>{{ label }}</template>
+            {{ label }}
           </template>
         </a-slider>
       </div>

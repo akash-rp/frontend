@@ -1,7 +1,10 @@
 <template>
-  <div class="flex flex-col mr-5 w-32 shrink-0">
+  <div
+    class="flex flex-col mr-5 shrink-0"
+    :class="{ 'w-32': type == 'server', 'w-40': type == 'site' }"
+  >
     <router-link
-      class="options"
+      class="options my-1"
       :class="{ backup: item.name == 'Backup' }"
       v-for="item of menuItems"
       v-bind:key="item.name"

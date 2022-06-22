@@ -12,19 +12,41 @@
       </div>
       <div class="flex flex-col divide-y-2">
         <div class="">
-          <h1 class="text-xl font-semibold p-5">CPU Usage</h1>
+          <div class="flex flex-row justify-between items-center">
+            <h1 class="text-xl font-semibold p-5">CPU Usage</h1>
+            <div class="pr-5">
+              <a-select
+                ref="select"
+                v-model:value="time.cpu"
+                style="width: 120px"
+                :options="timeOptions"
+                @change="fetchIndividualMetrics('cpu', time.cpu)"
+              ></a-select>
+            </div>
+          </div>
           <apexchart
             :is="Component"
             :key="$route.fullPath"
             height="400"
             type="area"
             :options="chartOptions.cpuChartOptions"
-            :series="$store.state.cpuMetrics"
+            :series="this.metrics.cpu"
             v-if="renderChart"
           ></apexchart>
         </div>
         <div class="">
-          <h1 class="text-xl font-semibold p-5">Load</h1>
+          <div class="flex flex-row justify-between items-center">
+            <h1 class="text-xl font-semibold p-5">Load</h1>
+            <div class="pr-5">
+              <a-select
+                ref="select"
+                v-model:value="time.load"
+                style="width: 120px"
+                :options="timeOptions"
+                @change="fetchIndividualMetrics('load', time.load)"
+              ></a-select>
+            </div>
+          </div>
           <apexchart
             height="400px"
             type="area"
@@ -34,7 +56,18 @@
           ></apexchart>
         </div>
         <div class="">
-          <h1 class="text-xl font-semibold p-5">Memory Usage</h1>
+          <div class="flex flex-row justify-between items-center">
+            <h1 class="text-xl font-semibold p-5">Memory Usage</h1>
+            <div class="pr-5">
+              <a-select
+                ref="select"
+                v-model:value="time.memory"
+                style="width: 120px"
+                :options="timeOptions"
+                @change="fetchIndividualMetrics('memory', time.memory)"
+              ></a-select>
+            </div>
+          </div>
           <apexchart
             height="400px"
             type="area"
@@ -44,7 +77,18 @@
           ></apexchart>
         </div>
         <div class="">
-          <h1 class="text-xl font-semibold p-5">Disk Usage</h1>
+          <div class="flex flex-row justify-between items-center">
+            <h1 class="text-xl font-semibold p-5">Disk Usage</h1>
+            <div class="pr-5">
+              <a-select
+                ref="select"
+                v-model:value="time.disk"
+                style="width: 120px"
+                :options="timeOptions"
+                @change="fetchIndividualMetrics('disk', time.disk)"
+              ></a-select>
+            </div>
+          </div>
           <apexchart
             height="400px"
             type="area"
@@ -61,7 +105,8 @@
 <script>
 import VueApexCharts from "vue3-apexcharts";
 import { useToast } from "vue-toastification";
-import ApexCharts from "apexcharts";
+import { object } from "vue-types";
+// import ApexCharts from "apexcharts";
 
 export default {
   name: "health",
@@ -85,12 +130,58 @@ export default {
       fetchError: false,
       chartOptions: {
         cpuChartOptions: {
+          tooltip: {
+            y: {
+              title: {
+                formatter: () => "",
+              },
+            },
+            x: {
+              show: false,
+              formatter: (a) => {
+                return new Date(a).toLocaleTimeString("en-US", {
+                  hour12: false,
+                  hour: "2-digit",
+                  minute: "2-digit",
+                });
+              },
+            },
+            marker: {
+              show: false,
+            },
+          },
           chart: {
             id: "cpu",
             toolbar: { show: false },
+            animations: {
+              enabled: true,
+              easing: "linear",
+              speed: 100,
+              animateGradually: {
+                enabled: false,
+                delay: 150,
+              },
+              dynamicAnimation: {
+                enabled: true,
+                speed: 800,
+              },
+            },
           },
           xaxis: {
             type: "datetime",
+            labels: {
+              datetimeFormatter: {
+                year: "yyyy",
+                month: "MMM 'yy",
+                day: "dd MMM",
+                hour: "HH:mm",
+                minute: "HH:mm",
+              },
+              datetimeUTC: false,
+            },
+            crosshairs: {
+              show: false,
+            },
           },
           yaxis: {
             min: 0,
@@ -102,21 +193,9 @@ export default {
               },
             },
           },
-          animations: {
-            enabled: false,
-            easing: "easeinout",
-            speed: 800,
-            animateGradually: {
-              enabled: false,
-              delay: 150,
-            },
-            dynamicAnimation: {
-              enabled: false,
-              speed: 350,
-            },
-          },
+
           noData: {
-            text: "Loaing",
+            text: "Loading",
             align: "center",
             verticalAlign: "middle",
             offsetX: 0,
@@ -136,12 +215,45 @@ export default {
           },
         },
         memoryChartOptions: {
+          tooltip: {
+            y: {
+              title: {
+                formatter: () => "",
+              },
+            },
+            x: {
+              show: false,
+              formatter: (a) => {
+                return new Date(a).toLocaleTimeString("en-US", {
+                  hour12: false,
+                  hour: "2-digit",
+                  minute: "2-digit",
+                });
+              },
+            },
+            marker: {
+              show: false,
+            },
+          },
           chart: {
             id: "Memory",
             toolbar: { show: false },
           },
           xaxis: {
             type: "datetime",
+            labels: {
+              datetimeFormatter: {
+                year: "yyyy",
+                month: "MMM 'yy",
+                day: "dd MMM",
+                hour: "HH:mm",
+                minute: "HH:mm",
+              },
+              datetimeUTC: false,
+            },
+            crosshairs: {
+              show: false,
+            },
           },
           yaxis: {
             min: 0,
@@ -164,12 +276,45 @@ export default {
           },
         },
         loadChartOptions: {
+          tooltip: {
+            y: {
+              title: {
+                formatter: () => "",
+              },
+            },
+            x: {
+              show: false,
+              formatter: (a) => {
+                return new Date(a).toLocaleTimeString("en-US", {
+                  hour12: false,
+                  hour: "2-digit",
+                  minute: "2-digit",
+                });
+              },
+            },
+            marker: {
+              show: false,
+            },
+          },
           chart: {
             id: "load",
             toolbar: { show: false },
           },
           xaxis: {
             type: "datetime",
+            labels: {
+              datetimeFormatter: {
+                year: "yyyy",
+                month: "MMM 'yy",
+                day: "dd MMM",
+                hour: "HH:mm",
+                minute: "HH:mm",
+              },
+              datetimeUTC: false,
+            },
+            crosshairs: {
+              show: false,
+            },
           },
           yaxis: {
             min: 0,
@@ -186,12 +331,45 @@ export default {
           },
         },
         diskChartOptions: {
+          tooltip: {
+            y: {
+              title: {
+                formatter: () => "",
+              },
+            },
+            x: {
+              show: false,
+              formatter: (a) => {
+                return new Date(a).toLocaleTimeString("en-US", {
+                  hour12: false,
+                  hour: "2-digit",
+                  minute: "2-digit",
+                });
+              },
+            },
+            marker: {
+              show: false,
+            },
+          },
           chart: {
             id: "disk",
             toolbar: { show: false },
           },
           xaxis: {
             type: "datetime",
+            labels: {
+              datetimeFormatter: {
+                year: "yyyy",
+                month: "MMM 'yy",
+                day: "dd MMM",
+                hour: "HH:mm",
+                minute: "HH:mm",
+              },
+              datetimeUTC: false,
+            },
+            crosshairs: {
+              show: false,
+            },
           },
           yaxis: {
             min: 0,
@@ -219,6 +397,46 @@ export default {
         load: [],
         disk: [],
       },
+      time: {
+        cpu: "1hr",
+        memory: "1hr",
+        disk: "1hr",
+        load: "1hr",
+      },
+      timeOptions: [
+        {
+          value: "1hr",
+          label: "1 Hour",
+        },
+        {
+          value: "3hr",
+          label: "3 Hours",
+        },
+        {
+          value: "6hr",
+          label: "6 Hours",
+        },
+        {
+          value: "12hr",
+          label: "12 Hours",
+        },
+        {
+          value: "1day",
+          label: "1 Day",
+        },
+        {
+          value: "3days",
+          label: "3 Days",
+        },
+        {
+          value: "7days",
+          label: "7 Days",
+        },
+        {
+          value: "14days",
+          label: "14 Days",
+        },
+      ],
     };
   },
   methods: {
@@ -237,11 +455,29 @@ export default {
             load: [{ data: load }],
             disk: [{ data: disk }],
           };
-          this.$store.commit("addMetrics", cpu);
         })
         .catch(() => {
           this.fetchError = true;
           this.toast.error("Failed to fetch Server Health");
+        });
+    },
+    fetchIndividualMetrics(metric, duration) {
+      this.$axios
+        .get(
+          "/server/" +
+            this.$route.params.serverid +
+            "/health/" +
+            metric +
+            "/" +
+            duration
+        )
+        .then((res) => {
+          this.metrics[metric] = [
+            { data: res.data.map((data) => Object.values(data)) },
+          ];
+        })
+        .catch(() => {
+          this.$toast.error("Failed to fetch metrics");
         });
     },
   },
@@ -253,6 +489,18 @@ export default {
   },
   deactivated() {
     this.renderChart = false;
+    this.metrics = {
+      cpu: [],
+      memory: [],
+      load: [],
+      disk: [],
+    };
+    this.time = {
+      cpu: "1hr",
+      memory: "1hr",
+      disk: "1hr",
+      load: "1hr",
+    };
   },
   computed: {
     memoryOptions() {

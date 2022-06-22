@@ -57,7 +57,7 @@ export default {
   },
   methods: {
     register() {
-      fetch("http://localhost/register", {
+      fetch("/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

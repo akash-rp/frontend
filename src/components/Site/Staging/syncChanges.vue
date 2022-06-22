@@ -181,19 +181,17 @@ export default {
       }
     },
     selectedPartialDatabase() {
-      fetch(
-        "http://localhost/site/" +
-          this.$store.state.currentSite.siteId +
-          "/getdbtables"
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.error) {
-            console.log(data.error);
-            return;
-          }
-          this.tables = data;
-        });
+      this.$axios
+        .get(
+          "/site/" +
+            this.$store.state.currentSite.siteId +
+            "/getdbtables"
+        )
+
+        .then((res) => {
+          this.tables = res.data;
+        })
+        .catch(() => {});
     },
     selectAllTables(event) {
       if (event.target.checked) {
@@ -214,7 +212,6 @@ export default {
           dbType: this.dbType,
           allSelected: this.selectedAll,
         })
-        .then((res) => res.json())
         .then((data) => {
           if (data.error) {
             console.log(data.error);

@@ -4,6 +4,7 @@ module.exports = {
     extend: {
       width: {
         38: "9.5rem",
+        30: "7.5rem",
       },
       colors: {
         default: "#eff3f8",

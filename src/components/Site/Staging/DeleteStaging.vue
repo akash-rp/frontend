@@ -14,12 +14,8 @@ export default {
   props: ["name"],
   methods: {
     deleteStaging() {
-      this.axios
-        .get(
-          "http://localhost/staging/" +
-            this.$store.state.currentSite.staging +
-            "/delete"
-        )
+      this.$axios
+        .get("/staging/" + this.$store.state.currentSite.staging + "/delete")
         .then(() => {
           this.$store.commit("removeStaging");
           this.$emit("close");

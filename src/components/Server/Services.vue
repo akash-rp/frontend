@@ -21,16 +21,8 @@
           bodyClass="w-10"
         >
           <template #body="{ data }">
-            <tag
-              v-if="data.running == true"
-              value="Running"
-              severity="success"
-            ></tag>
-            <tag
-              v-if="data.running == false"
-              value="Stopped"
-              severity="warning"
-            ></tag>
+            <tag v-if="data.running == true" severity="success">Running</tag>
+            <tag v-if="data.running == false" severity="warning">Stopped</tag>
           </template>
         </Column>
 

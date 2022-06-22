@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import Login from "./components/Login/Login.vue";
+import Login from "./components/Auth/Login.vue";
 import Servers from "./components/Server/ServersList.vue";
-import Register from "./components/Login/Register.vue";
+import Register from "./components/Auth/Register.vue";
 import NewServer from "./components/Server/NewServer.vue";
 import Server from "./components/Server/Server.vue";
 import ServerInfo from "./components/Server/ServerInfo.vue";
@@ -18,15 +18,36 @@ import BackupListLocal from "./components/Site/Backup/LocalBackupList.vue";
 import Staging from "./components/Site/Staging/Staging.vue";
 import ServerHealth from "./components/Server/Health.vue";
 import Services from "./components/Server/Services.vue";
-import Firewall from "./components/Site/Firewall/Firewall.vue";
+import SiteSecurity from "./components/Site/Security/Security.vue";
+import ServerSecurity from "./components/Server/Security/Security.vue";
+import SystemUser from "./components/Server/SystemUser/SystemUser.vue";
+import SshKey from "./components/Server/SshKeys/SshKey.vue";
+import PluginAndTheme from "./components/Site/PluginAndTheme.vue";
+import ServerSettings from "./components/Server/Settings.vue";
+import SiteTools from "./components/Site/Tools.vue";
+import DNS from "./components/DnsManagement/Dns.vue";
+import UserSettings from "./components/UserSettings/UserSettings.vue";
+import Integration from "./components/UserSettings/Integration.vue";
 
 const router = createRouter({
   history: createWebHistory(),
 
   routes: [
     { path: "/login", component: Login, name: "login" },
-    { path: "/", redirect: "/servers" },
-    { path: "/servers", component: Servers },
+    {
+      path: "/settings",
+      component: UserSettings,
+      children: [
+        {
+          path: "integration",
+          component: Integration,
+        },
+      ],
+    },
+    {
+      path: "/servers",
+      component: Servers,
+    },
     { path: "/register", component: Register, name: "register" },
     { path: "/createServer", component: NewServer },
     {
@@ -53,6 +74,22 @@ const router = createRouter({
         {
           path: "services",
           component: Services,
+        },
+        {
+          path: "security",
+          component: ServerSecurity,
+        },
+        {
+          path: "users",
+          component: SystemUser,
+        },
+        {
+          path: "ssh",
+          component: SshKey,
+        },
+        {
+          path: "settings",
+          component: ServerSettings,
         },
       ],
     },
@@ -89,22 +126,23 @@ const router = createRouter({
           component: Staging,
         },
         {
-          path: "firewall",
-          component: Firewall,
+          path: "security",
+          component: SiteSecurity,
+        },
+        {
+          path: "plugins",
+          component: PluginAndTheme,
+        },
+        {
+          path: "tools",
+          component: SiteTools,
         },
       ],
     },
+    { path: "/dns-management", component: DNS },
   ],
   linkExactActiveClass: "active",
   linkActiveClass: "link-active",
-});
-
-router.beforeEach((to) => {
-  if (to.path === "/login" || to.path === "/register") {
-    return true;
-  } else if (!localStorage.token || localStorage.token == "undefined") {
-    return "/login";
-  }
 });
 
 export default router;

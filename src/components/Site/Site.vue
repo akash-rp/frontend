@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-col" v-if="!notFound">
     <header class="flex items-center py-4">
       <svg
         id="Layer_1"
@@ -16,7 +16,7 @@
       </svg>
       <h1 class="text-3xl font-semibold">{{ site.name }}</h1>
     </header>
-    <main class="flex">
+    <main class="flex" v-if="!loading">
       <settings :menuItems="menuItems" type="site"></settings>
       <div class="w-full bg-white rounded shadow">
         <router-view></router-view>
@@ -24,11 +24,13 @@
     </main>
     <delete-site v-if="showDeletePopup == true"></delete-site>
   </div>
+  <NotFound v-if="notFound"></NotFound>
 </template>
 
 <script>
 import DeleteSite from "./DeleteSite.vue";
 import Settings from "../SettingsSidepanel.vue";
+import NotFound from "../NotFound.vue";
 export default {
   data() {
     return {
@@ -37,16 +39,20 @@ export default {
         { name: "Summary", to: "" },
         { name: "Domains", to: "/domains" },
         { name: "PHP", to: "/php" },
-        { name: "Firewall", to: "/firewall" },
+        { name: "Security", to: "/security" },
         { name: "Backup", to: "/backup", class: "backup" },
         { name: "Staging", to: "/staging" },
+        { name: "Plugins and Themes", to: "/plugins" },
+        { name: "Tools", to: "/tools" },
       ],
+      notFound: false,
+      loading: true,
     };
   },
   created() {
     this.getSite();
   },
-  components: { DeleteSite, Settings },
+  components: { DeleteSite, Settings, NotFound },
   watch: {
     "$route.params.siteid"() {
       if (this.$route.params.siteid == undefined) {
@@ -58,9 +64,19 @@ export default {
 
   methods: {
     getSite() {
-      fetch("http://localhost/site/" + this.$route.params.siteid)
-        .then((response) => response.json())
-        .then((data) => this.$store.commit("setCurrentSite", data));
+      this.$axios
+        .get("/site/" + this.$route.params.siteid)
+        .then((res) => this.$store.commit("setCurrentSite", res.data))
+        .catch((err) => {
+          if (err.response.status == 404) {
+            this.notFound = true;
+          } else {
+            this.$toast.error("Failed to get site");
+          }
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     domainAdd(data) {
       this.site.domain = data.domain;

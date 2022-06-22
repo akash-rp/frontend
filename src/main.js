@@ -67,4 +67,5 @@ app.use(Toast, {
 app.component("Button", Button);
 app.directive("tooltip", Tooltip);
 app.directive("ripple", Ripple);
+
 app.mount("#app");

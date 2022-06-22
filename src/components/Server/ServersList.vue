@@ -151,6 +151,7 @@ export default {
   methods: {
     onRowSelect(event) {
       this.$router.push("/server/" + event.data.serverId);
+      // this.$store.commit("setCurrentServer", event.data);
     },
   },
   computed: {

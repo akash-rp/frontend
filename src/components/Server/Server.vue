@@ -1,41 +1,49 @@
 <template>
-  <div class="flex flex-col">
+  <div class="flex flex-col" v-if="!notFound">
     <header class="flex items-center py-4">
-      <h1 class="text-3xl font-semibold">{{ name }}</h1>
+      <h1 class="text-3xl font-semibold">
+        {{ $store.state.currentServer.name }}
+      </h1>
     </header>
-    <main class="flex">
+    <main class="flex" v-if="!loading">
       <settings :menuItems="menuItems" type="server"></settings>
       <router-view v-slot="{ Component }">
-        <keep-alive exclude="">
+        <keep-alive exclude="settings">
           <component :is="Component" :key="$route.fullPath"></component>
         </keep-alive>
       </router-view>
       <!-- <router-view></router-view> -->
     </main>
   </div>
+  <NotFound v-if="notFound"></NotFound>
 </template>
 
 <script>
 import Settings from "../SettingsSidepanel.vue";
 import { useToast } from "vue-toastification";
+import NotFound from "../NotFound.vue";
 export default {
   setup() {
     const toast = useToast();
     return { toast };
   },
-  components: { Settings },
+  components: { Settings, NotFound },
   data() {
     return {
       server: "",
       error: "",
-      name: "Akash",
       menuItems: [
         { name: "Summary", to: "" },
         { name: "Sites", to: "/sites" },
         { name: "Server Health", to: "/health" },
         { name: "Services", to: "/services" },
         { name: "Security", to: "/security" },
+        { name: "System Users", to: "/users" },
+        { name: "SSH Keys", to: "/ssh" },
+        { name: "Settings", to: "/settings" },
       ],
+      notFound: false,
+      loading: true,
     };
   },
   watch: {
@@ -43,7 +51,7 @@ export default {
       this.getServerInfo();
     },
   },
-  created() {
+  activated() {
     this.error = "";
     this.getServerInfo();
   },
@@ -53,16 +61,23 @@ export default {
         return;
       }
       this.$axios
-        .get("http://localhost/server/" + this.$route.params.serverid)
+        .get("/server/" + this.$route.params.serverid)
         .then((res) => {
           var serverid = this.$route.params.serverid;
           var sites = { [serverid]: res.data.sites };
           this.$store.commit("setSites", sites);
           delete res.data.sites;
+          console.log(res.data);
           this.$store.commit("setCurrentServer", res.data);
         })
-        .catch(() => {
+        .catch((err) => {
+          if (err.response.status == 404) {
+            this.notFound = true;
+          }
           this.toast.error("Failed to fetch Resource Usage");
+        })
+        .finally(() => {
+          this.loading = false;
         });
     },
   },

@@ -397,7 +397,7 @@ export default {
     changePrimary() {
       this.isShowPrimary = false;
       this.$axios
-        .post("http://localhost/site/" + this.site.siteId + "/changePrimary", {
+        .post("/site/" + this.site.siteId + "/changePrimary", {
           url: this.toPrimaryUrl,
           serverid: this.site.serverId,
         })
@@ -509,35 +509,28 @@ export default {
         });
     },
     changeRoute(routeType, url) {
-      fetch("http://localhost/site/" + this.site.siteId + "/changeRoute", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      this.$axios
+        .post("/site/" + this.site.siteId + "/changeRoute", {
           url: url,
           serverid: this.site.serverId,
           type: routeType,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.error) {
-            console.log(data.error);
+        })
+        .then(() => {
+          if (this.site.domain.primary.url == url) {
+            this.site.domain.primary.routing = routeType;
           } else {
-            if (this.site.domain.primary.url == url) {
-              this.site.domain.primary.routing = routeType;
-            } else {
-              for (let alias of this.site.domain.alias) {
-                if (alias.url == url) {
-                  alias.routing = routeType;
-                  break;
-                }
+            for (let alias of this.site.domain.alias) {
+              if (alias.url == url) {
+                alias.routing = routeType;
+                break;
               }
             }
-            this.$store.commit("setCurrentSite", this.site);
-            this.isShowRouting = false;
           }
+          this.$store.commit("setCurrentSite", this.site);
+          this.isShowRouting = false;
+        })
+        .catch(() => {
+          this.$toast.error("Failed to change route");
         });
     },
     makePrimary(url) {

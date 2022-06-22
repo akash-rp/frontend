@@ -1,0 +1,6 @@
+{
+  "vueCompilerOptions": {
+    "experimentalShamefullySupportOptionsApi": true,
+    "experimentalDisableTemplateSupport": true
+  }
+}

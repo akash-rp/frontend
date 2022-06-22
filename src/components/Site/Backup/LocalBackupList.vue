@@ -6,13 +6,35 @@
       optionLabel="name"
       optionValue="value"
     />
-    <button
-      class="bg-blue-700 rounded py-2 px-2 text-white mr-5"
-      @click="takeLocalOndemandBackup"
+    <a-form
+      :model="ondemandForm"
+      name="ondemand"
+      autocomplete="off"
+      @finish="takeLocalOndemandBackup"
       v-if="mode == 'ondemand'"
+      layout="inline"
+      class="flex flex-row items-center"
     >
-      Take Backup
-    </button>
+      <a-form-item
+        label=""
+        name="tag"
+        :rules="[{ required: true, message: 'Please enter tag' }]"
+      >
+        <a-input
+          v-model:value="ondemandForm.tag"
+          placeholder="Tag for identification"
+        />
+      </a-form-item>
+
+      <a-form-item>
+        <button
+          class="bg-blue-700 rounded py-2 px-2 text-white mr-5"
+          html-type="sumbit"
+        >
+          Take Backup
+        </button>
+      </a-form-item>
+    </a-form>
   </div>
   <DataTable
     :value="showList"
@@ -50,13 +72,42 @@
         {{ formatSize(data.rootEntry.summ.size) }}
       </template>
     </Column>
+    <Column
+      field="description"
+      header="Tag"
+      headerStyle="background-color:#eff3f8;"
+      bodyClass=""
+      v-if="mode !== 'automatic'"
+    >
+    </Column>
     <Column headerStyle="background-color:#eff3f8;">
-      <template #body>
-        <div
-          class="border w-min px-4 py-2 cursor-pointer rounded text-gray-700 hover:text-indigo-700 hover:border-indigo-700"
-          @click="initRestore(getdate(one.startTime), one.rootEntry.obj, mode)"
-        >
-          Restore
+      <template #body="{ data }">
+        <div class="flex flex-row items-center">
+          <div
+            class="border w-min px-4 py-2 cursor-pointer rounded text-gray-700 hover:text-indigo-700 hover:border-indigo-700"
+            @click="
+              initRestore(getdate(data.startTime), data.rootEntry.obj, mode)
+            "
+          >
+            Restore
+          </div>
+          <div class="ml-5">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+              @click="downloadBackup(data.id, mode)"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+              />
+            </svg>
+          </div>
         </div>
       </template>
     </Column>
@@ -148,7 +199,8 @@ export default {
   name: "backup",
   data() {
     return {
-      backupList: { automatic: [], ondemand: [] },
+      ondemandForm: { tag: "" },
+      backupList: { automatic: [], ondemand: [], system: [] },
       showList: [],
       modalOpen: false,
       restore: {
@@ -169,6 +221,10 @@ export default {
           name: "Manual",
           value: "ondemand",
         },
+        {
+          name: "System",
+          value: "system",
+        },
       ],
     };
   },
@@ -177,33 +233,31 @@ export default {
     // this.showList = this.backupList.automatic;
   },
   methods: {
-    restoreBackup() {
-      fetch(
+    downloadBackup(id, mode) {
+      window.open(
         "http://localhost/site/" +
           this.$route.params.siteid +
-          "/restorelocalbackup",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+          "/backup/download/" +
+          mode +
+          "/" +
+          id
+      );
+    },
+    restoreBackup() {
+      this.$axios
+        .post("/site/" + this.$route.params.siteid + "/restorelocalbackup", {
+          restore: {
+            id: this.restore.id,
+            date: this.restore.date,
+            type: this.restore.type,
+            mode: this.restore.mode,
           },
-          body: JSON.stringify({
-            restore: {
-              id: this.restore.id,
-              date: this.restore.date,
-              type: this.restore.type,
-              mode: this.restore.mode,
-            },
-          }),
-        }
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.error) {
-            console.log(data.error);
-          } else {
-            this.modalOpen = false;
-          }
+        })
+        .then(() => {
+          this.modalOpen = false;
+        })
+        .catch(() => {
+          this.$toast.error("Failed to restore backup");
         });
     },
     getLocalBackups() {
@@ -233,7 +287,6 @@ export default {
         hour12: true,
         hour: "2-digit",
         minute: "2-digit",
-        timeZone: "UTC",
       };
       return d.toLocaleString("en-us", options);
     },
@@ -249,12 +302,15 @@ export default {
     },
     takeLocalOndemandBackup() {
       this.$axios
-        .get("site/" + this.$route.params.siteid + "/localondemandbackup")
+        .post("site/" + this.$route.params.siteid + "/localondemandbackup", {
+          tag: this.ondemandForm.tag,
+        })
         .then((res) => {
           if (typeof res.data !== String) {
             this.backupList = res.data;
           }
           this.$toast.success("Created ondemand backup");
+          this.ondemandForm.tag = "";
         })
         .catch(() => {
           this.$toast.error("Failed to create ondemand backup");
@@ -276,8 +332,10 @@ export default {
     mode() {
       if (this.mode == "automatic") {
         this.showList = this.backupList.automatic;
-      } else {
+      } else if (this.mode == "ondemand") {
         this.showList = this.backupList.ondemand;
+      } else {
+        this.showList = this.backupList.system;
       }
       this.getLocalBackups();
     },
@@ -292,8 +350,10 @@ export default {
         });
         if (this.mode == "automatic") {
           this.showList = this.backupList.automatic;
-        } else {
+        } else if (this.mode == "ondemand") {
           this.showList = this.backupList.ondemand;
+        } else {
+          this.showList = this.backupList.system;
         }
       },
     },

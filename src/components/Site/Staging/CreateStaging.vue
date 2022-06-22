@@ -90,9 +90,7 @@ export default {
       this.loading.submit = true;
       this.$axios
         .post(
-          "http://localhost/site/" +
-            this.$store.state.currentSite.siteId +
-            "/createstaging",
+          "/site/" + this.$store.state.currentSite.siteId + "/createstaging",
           {
             url: this.url,
           }

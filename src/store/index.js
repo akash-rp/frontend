@@ -1,10 +1,10 @@
 import { createStore } from "vuex";
+import axios from "../axios-instance";
 
 const store = createStore({
   state() {
     return {
-      firstName: "",
-      email: "",
+      user: {},
       servers: [],
       sites: {},
       currentSite: {},
@@ -22,6 +22,13 @@ const store = createStore({
         },
       },
       cpuMetrics: [{ data: [] }],
+      user: undefined,
+      cloudflare: {
+        api: [],
+        zones: [],
+        current: {},
+      },
+      integrations: { backup: [] },
     };
   },
   mutations: {
@@ -62,12 +69,30 @@ const store = createStore({
     set7G(state, data) {
       state.currentSite.firewall.sevenG = data;
     },
+    initUser(state, data) {
+      state.user = data;
+    },
+    cloudflareApi(state, data) {
+      state.cloudflare.api = data;
+    },
+    cloudflareZones(state, data) {
+      state.cloudflare.zones = data;
+    },
+    cloudflareCurrent(state, data) {
+      state.cloudflare.current = data;
+    },
+    setUser(state, data) {
+      state.user = data;
+    },
+    setUserIntegration(state, data) {
+      state.integrations = data;
+    },
   },
   actions: {
     getSites({ commit }, route) {
-      fetch("http://localhost/server/" + route.route.params.serverid + "/sites")
-        .then((response) => response.json())
-        .then((data) => commit("setSites", data));
+      axios
+        .get("/server/" + route.route.params.serverid + "/sites")
+        .then((res) => commit("setSites", res.data));
     },
   },
 });

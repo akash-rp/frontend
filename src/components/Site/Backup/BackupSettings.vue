@@ -58,6 +58,7 @@
           v-model:value="backupSettings['frequency']"
           style="width: 120px"
           :options="freqOptions"
+          :disabled="!backupSettings['automatic']"
         ></a-select>
       </div>
       <div class="flex flex-row items-center mt-4">
@@ -67,7 +68,10 @@
           v-model:value="backupSettings['time']['hour']"
           style="width: 70px"
           :options="this.time.hour"
-          :disabled="backupSettings['frequency'] == 'Hourly'"
+          :disabled="
+            backupSettings['frequency'] == 'Hourly' ||
+            !backupSettings['automatic']
+          "
         >
           <template #suffixIcon><div id="suffix">HH</div></template>
         </a-select>
@@ -77,6 +81,7 @@
           v-model:value="backupSettings['time']['minute']"
           style="width: 70px"
           :options="this.time.minute"
+          :disabled="!backupSettings['automatic']"
         >
           <template #suffixIcon><div id="suffix">MM</div></template>
         </a-select>
@@ -87,6 +92,7 @@
           style="width: 130px"
           :options="this.time.day"
           v-if="backupSettings.frequency == 'Weekly'"
+          :disabled="!backupSettings['automatic']"
         >
           <template #suffixIcon><div id="suffix">Day</div></template>
         </a-select>
@@ -96,6 +102,7 @@
           style="width: 70px"
           :options="this.time.day"
           v-if="backupSettings.frequency == 'Monthly'"
+          :disabled="!backupSettings['automatic']"
         >
           <template #suffixIcon><div id="suffix">Day</div></template>
         </a-select>
@@ -187,6 +194,7 @@
           min="1"
           :max="maxRetention"
           class="mr-2"
+          :disabled="!backupSettings['automatic']"
         ></a-input-number>
 
         <a-select
@@ -194,6 +202,7 @@
           v-model:value="backupSettings['retention']['type']"
           style="width: 120px"
           :options="retOptions"
+          :disabled="!backupSettings['automatic']"
         ></a-select>
         <!-- <div
           class="custom-select inline-block w-44 ml-4"
@@ -234,6 +243,7 @@
       </button>
     </div>
   </section>
+  <RemoteBackupSettings></RemoteBackupSettings>
 </template>
 
 <script>
@@ -248,6 +258,7 @@ import "ant-design-vue/lib/input/style/index.css";
 // import { InputNumber } from "ant-design-vue";
 import "ant-design-vue/lib/input-number/style/index.css";
 // import { useToast } from "vue-toastification";
+import RemoteBackupSettings from "./RemoteBackupSettings.vue";
 
 export default {
   name: "backupSettings",
@@ -312,11 +323,11 @@ export default {
         })
         .then(() => {
           this.$store.commit("updateBackup", backupSettings);
-          this.toast.success("Backup settings updated");
+          this.$toast.success("Backup settings updated");
         })
-        .catch(() => {
-          console.log("failed");
-          this.toast.error("Failed to update backup settings");
+        .catch((err) => {
+          console.log(err);
+          this.$toast.error("Failed to update backup settings");
         });
     },
 
@@ -432,6 +443,7 @@ export default {
     // AButton: Button,
     // AInput: Input,
     // AInputNumber: InputNumber,
+    RemoteBackupSettings,
   },
 };
 </script>

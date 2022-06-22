@@ -58,12 +58,8 @@ export default {
   methods: {
     deleteSite() {
       if (this.name == this.checkName) {
-        this.axios
-          .get(
-            "http://localhost/site/" +
-              this.$store.state.currentSite.siteId +
-              "/delete"
-          )
+        this.$axios
+          .get("/site/" + this.$store.state.currentSite.siteId + "/delete")
           .then(() => {
             let serverId = this.$store.state.currentSite.serverId;
             this.$router.push("/server/" + serverId + "/sites");

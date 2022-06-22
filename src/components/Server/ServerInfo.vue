@@ -1,7 +1,7 @@
 <template>
   <div class="w-full">
     <div class="flex flex-row">
-      <div class="bg-white w-1/3 shadow rounded divide-y divide-y-reverse">
+      <!-- <div class="bg-white w-1/3 shadow rounded divide-y divide-y-reverse">
         <h2 class="text-xl font-semibold px-5 py-5 border-b">Server Info</h2>
         <div
           class="flex flex-row justify-between p-5"
@@ -11,11 +11,11 @@
           <div class="font-medium">{{ info.source }}</div>
           <div>{{ info.value }}</div>
         </div>
-      </div>
-      <div class="bg-white ml-5 shadow rounded w-full">
+      </div> -->
+      <div class="bg-white shadow rounded w-full">
         <h2 class="text-xl p-5 font-semibold border-b">Resource Usage</h2>
         <div class="grid-cols-3 grid" v-if="!resourceError">
-          <div class="pb-10 pt-5 border-b text-center">
+          <div class="pb-5 pt-5 border-b text-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="10"
@@ -153,7 +153,7 @@
               {{ this.currentServer.stats.uptime }}
             </div>
           </div>
-          <div class="pt-5 pb-10 text-center">
+          <div class="pt-5 pb-5 text-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-5 w-5 inline-block"
@@ -224,6 +224,7 @@
         >
       </div>
       <DataTable
+        v-if="sites && sites.length > 0"
         :value="sites"
         class="p-datatable-lg"
         :rowHover="true"
@@ -277,6 +278,9 @@
           </template>
         </Column>
       </DataTable>
+      <div class="w-full">
+        <button class="m-auto">Test</button>
+      </div>
     </div>
   </div>
 </template>

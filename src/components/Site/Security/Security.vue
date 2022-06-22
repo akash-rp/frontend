@@ -1,9 +1,6 @@
 <template>
-  <h1 class="header">Firewall</h1>
-  <p class="px-5">
-    Firewall gives protection against serveral types of attacks. You can enable
-    either <b> 7G WAF, </b><b> Modsec WAF </b>or both.
-  </p>
+  <h1 class="header">Security</h1>
+
   <div>
     <tab-view>
       <TabPanel header="7G WAF">
@@ -19,8 +16,8 @@
 <script>
 import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
-import SevenG from "../Firewall/7G.vue";
-import Modsec from "../Firewall/modsec.vue";
+import SevenG from "../Security/7G.vue";
+import Modsec from "../Security/modsec.vue";
 
 export default {
   components: { TabView, TabPanel, SevenG, Modsec },

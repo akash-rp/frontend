@@ -86,12 +86,8 @@ export default {
   },
   methods: {
     addSite() {
-      fetch("http://localhost/addsite/" + this.$route.params.serverid, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      this.$axios
+        .post("/addsite/" + this.$route.params.serverid, {
           appName: this.name,
           url: this.domain,
           userName: this.user,
@@ -100,17 +96,15 @@ export default {
           adminEmail: this.email,
           adminPassword: this.password,
           php: this.php,
-        }),
-      })
-        .then((response) => response.json())
+        })
         .then((data) => {
-          console.log("data", data);
-          if (data) {
-            this.$store.commit("setSites", data);
-            this.$router.push(
-              "/server/" + this.$route.params.serverid + "/sites"
-            );
-          }
+          this.$store.commit("setSites", data);
+          this.$router.push(
+            "/server/" + this.$route.params.serverid + "/sites"
+          );
+        })
+        .cath(() => {
+          this.$toast.error("Failed to add site");
         });
     },
   },

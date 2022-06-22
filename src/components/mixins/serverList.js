@@ -1,23 +1,15 @@
+import axios from "../../axios-instance";
+
 export default {
   methods: {
     getServersList() {
-      fetch("http://localhost/servers", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      axios
+        .post("/servers", {
           userId: localStorage.id,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.error) {
-            this.error = data.error;
-            return;
-          }
-          console.log(data);
-          this.$store.commit("setServers", data);
+        })
+
+        .then((res) => {
+          this.$store.commit("setServers", res.data);
         })
         .catch((err) => (this.error = err));
     },

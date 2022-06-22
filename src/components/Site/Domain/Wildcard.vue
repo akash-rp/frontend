@@ -16,36 +16,30 @@ export default {
   methods: {
     changeWildcard() {
       console.log(this.type);
-      fetch("http://localhost/site/" + this.site.siteId + "/wildcard", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      this.$axios
+        .post("/site/" + this.site.siteId + "/wildcard", {
           url: this.url,
           serverid: this.site.serverId,
           wildcard: !this.status,
           type: this.type,
-        }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.error) {
-            console.log(data.error);
+        })
+
+        .then(() => {
+          if (this.site.domain.primary.url == this.url) {
+            this.site.domain.primary.wildcard = !this.status;
           } else {
-            if (this.site.domain.primary.url == this.url) {
-              this.site.domain.primary.wildcard = !this.status;
-            } else {
-              for (let ali of this.site.domain.alias) {
-                if (ali.url == this.url) {
-                  ali.wildcard = !this.status;
-                  break;
-                }
+            for (let ali of this.site.domain.alias) {
+              if (ali.url == this.url) {
+                ali.wildcard = !this.status;
+                break;
               }
             }
-            this.$emit("close");
-            // this.$store.commit("currentSite", this.site);
           }
+          this.$emit("close");
+          // this.$store.commit("currentSite", this.site);
+        })
+        .catch(() => {
+          this.$toast.error("Failed to change wildcard");
         });
     },
   },

@@ -1,20 +1,47 @@
 <template>
-  <Nav v-if="!isLogin"></Nav>
-  <div class="ml-64 mr-8">
-    <router-view></router-view>
+  <Nav v-if="show"></Nav>
+  <div class="ml-72 mr-8" v-if="show">
+    <router-view v-slot="{ Component }">
+      <keep-alive exclude="backupSettings">
+        <component :is="Component" />
+      </keep-alive>
+    </router-view>
   </div>
+  <Login v-if="this.$route.name === 'login'"></Login>
 </template>
 
 <script>
 import Nav from "./components/Nav/Nav.vue";
+import Login from "./components/Auth/Login.vue";
 export default {
+  data() {
+    return {
+      loading: true,
+    };
+  },
   components: {
     Nav,
+    Login,
   },
   computed: {
-    isLogin() {
-      return this.$route.name === "login" || this.$route.name === "register";
+    show() {
+      return this.$store.state.user;
     },
+  },
+  async created() {
+    await this.$axios
+      .get("http://localhost:4000/sessions/whoami")
+      .then((res) => {
+        this.$store.commit("setUser", res.data);
+        // this.$router.push("/servers");
+      })
+      .catch(() => {
+        console.log("catched");
+        this.$router.push("/login");
+      })
+      .finally(() => {
+        this.loading = false;
+      });
   },
 };
 </script>
@@ -72,5 +99,12 @@ html {
 
 .pi::before {
   position: unset;
+}
+
+.anticon {
+  vertical-align: 0 !important;
+}
+.p-tabview .p-tabview-nav li .p-tabview-nav-link:not(.p-disabled):focus {
+  box-shadow: none !important;
 }
 </style>

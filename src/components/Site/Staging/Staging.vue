@@ -171,14 +171,12 @@ export default {
   methods: {
     fetchStagingSite() {
       console.log(this.$store.state.currentSite);
-      this.axios
-        .get("http://localhost/staging/" + this.$route.params.siteid)
-        .then((res) => {
-          res = res.data;
-          this.appName = res.name;
-          this.appUrl = res.domain.primary.url;
-          this.appUser = res.user;
-        });
+      this.$axios.get("/staging/" + this.$route.params.siteid).then((res) => {
+        res = res.data;
+        this.appName = res.name;
+        this.appUrl = res.domain.primary.url;
+        this.appUser = res.user;
+      });
     },
   },
   computed: {
