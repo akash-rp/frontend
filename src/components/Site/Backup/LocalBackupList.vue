@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-5 ml-5 flex flex-row justify-between items-center">
+  <div class="mt-5 ml-5 flex flex-row justify-between">
     <SelectButton
       v-model="mode"
       :options="options"
@@ -16,7 +16,6 @@
       class="flex flex-row items-center"
     >
       <a-form-item
-        label=""
         name="tag"
         :rules="[{ required: true, message: 'Please enter tag' }]"
       >
@@ -26,7 +25,7 @@
         />
       </a-form-item>
 
-      <a-form-item>
+      <a-form-item class="self-start">
         <button
           class="bg-blue-700 rounded py-2 px-2 text-white mr-5"
           html-type="sumbit"
@@ -48,6 +47,7 @@
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
     :paginator="showList.length > 10"
     :rows="10"
+    :loading="backupLoading"
   >
     <template #empty>
       <div class="">No Backups Available</div>
@@ -85,9 +85,7 @@
         <div class="flex flex-row items-center">
           <div
             class="border w-min px-4 py-2 cursor-pointer rounded text-gray-700 hover:text-indigo-700 hover:border-indigo-700"
-            @click="
-              initRestore(getdate(data.startTime), data.rootEntry.obj, mode)
-            "
+            @click="initRestore(getdate(data.startTime), data.id, mode)"
           >
             Restore
           </div>
@@ -113,96 +111,46 @@
     </Column>
   </DataTable>
 
-  <teleport to="body">
-    <div
-      class="w-screen h-screen flex justify-center items-center bg-gray-900 bg-opacity-50 top-0 left-0 fixed rounded"
-      @keydown.esc="modalOpen = false"
-      tabindex="0"
-      ref="deleteDomain"
-      @click.self="modalOpen = false"
-      v-if="modalOpen"
-    >
-      <div class="flex flex-col bg-white w-1/2 rounded">
-        <h1 class="text-4xl font-bold p-10 border-b text-indigo-700">
-          Backup Restore
-        </h1>
-        <div class="flex flex-col mt-5 px-10 text-2xl mb-10">
-          <p>
-            Restore backup from
-            <span class="font-bold">{{ restore.date }}</span> to Site Name
-            <span class="font-bold">{{
-              this.$store.state.currentSite.name
-            }}</span>
-          </p>
-        </div>
-        <div class="flex flex-col px-10">
-          <label class="text-2xl font-semibold mb-3">Restore Type</label>
-          <div>
-            <input
-              type="radio"
-              id="webapp"
-              class="form-radio h-7 w-7 mr-5"
-              value="webapp"
-              v-model="restore.type"
-            />
-            <label for="webapp" class="text-2xl mr-10">Web Application</label>
-          </div>
-          <div>
-            <input
-              type="radio"
-              id="db"
-              class="form-radio h-7 w-7 mr-5"
-              value="db"
-              v-model="restore.type"
-            />
-            <label for="db" class="text-2xl">Database</label>
-          </div>
-          <div>
-            <input
-              type="radio"
-              id="both"
-              class="form-radio h-7 w-7 mr-5"
-              value="both"
-              v-model="restore.type"
-            />
-            <label for="both" class="text-2xl">Both</label>
-          </div>
-        </div>
-        <div class="px-10 py-4 bg-gray-100 my-4">
-          <p class="text-2xl">{{ restore.message }}</p>
-        </div>
-        <div class="flex flex-row justify-end mb-5">
-          <button
-            class="rounded border-2 w-56 font-bold mr-10"
-            @click="modalOpen = false"
-          >
-            Cancel
-          </button>
-          <button
-            class="bg-indigo-700 rounded text-white font-bold p-5 w-56 mr-10"
-            @click="restoreBackup"
-          >
-            Restore
-          </button>
-        </div>
-      </div>
-    </div>
-  </teleport>
+  <a-modal
+    title="Backup Restore"
+    v-model:visible="showRestoreModal"
+    :destroyOnClose="true"
+  >
+    <template #footer>
+      <button
+        class="py-2 px-4 font-medium border border-black rounded"
+        @click="showRestoreModal = false"
+      >
+        Cancel
+      </button>
+      <button
+        class="py-2 px-4 bg-indigo-700 text-white rounded pointer"
+        type="submit"
+        form="restoreBackup"
+        html-type="submit"
+        @click="restoreBackup"
+      >
+        Restore
+      </button>
+    </template>
+    <restore-backup :restore="restore"></restore-backup>
+  </a-modal>
 </template>
 
 <script>
 import SelectButton from "primevue/selectbutton";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
+import RestoreBackup from "./RestoreBackup.vue";
 export default {
-  components: { SelectButton, DataTable, Column },
+  components: { SelectButton, DataTable, Column, RestoreBackup },
   name: "backup",
   data() {
     return {
       ondemandForm: { tag: "" },
       backupList: { automatic: [], ondemand: [], system: [] },
       showList: [],
-      modalOpen: false,
+      showRestoreModal: false,
       restore: {
         id: "",
         date: "",
@@ -226,6 +174,7 @@ export default {
           value: "system",
         },
       ],
+      backupLoading: false,
     };
   },
   created() {
@@ -245,13 +194,8 @@ export default {
     },
     restoreBackup() {
       this.$axios
-        .post("/site/" + this.$route.params.siteid + "/restorelocalbackup", {
-          restore: {
-            id: this.restore.id,
-            date: this.restore.date,
-            type: this.restore.type,
-            mode: this.restore.mode,
-          },
+        .post("/site/" + this.$route.params.siteid + "/restorebackup", {
+          restore: { ...this.restore },
         })
         .then(() => {
           this.modalOpen = false;
@@ -261,6 +205,7 @@ export default {
         });
     },
     getLocalBackups() {
+      this.backupLoading = true;
       this.$axios
         .get(
           "/site/" + this.$route.params.siteid + "/localbackuplist/automatic"
@@ -276,6 +221,9 @@ export default {
           if (this.mode == "automatic") {
             this.showList = this.backupList.automatic;
           }
+        })
+        .finally(() => {
+          this.backupLoading = false;
         });
     },
     getdate(date) {
@@ -295,7 +243,8 @@ export default {
       return Math.round(mb) + " MB";
     },
     initRestore(date, id, mode) {
-      this.modalOpen = true;
+      console.log(id);
+      this.showRestoreModal = true;
       this.restore.id = id;
       this.restore.date = date;
       this.restore.mode = mode;
@@ -319,16 +268,6 @@ export default {
   },
 
   watch: {
-    "restore.type"() {
-      if (this.restore.type == "both") {
-        this.restore.message =
-          "This process will overwrite both Web Application and Database";
-      } else if (this.restore.type == "db") {
-        this.restore.message = "This process will overwrite Database";
-      } else if (this.restore.type == "webapp") {
-        this.restore.message = "This process will overwrite Web Application";
-      }
-    },
     mode() {
       if (this.mode == "automatic") {
         this.showList = this.backupList.automatic;

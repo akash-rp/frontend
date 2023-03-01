@@ -38,6 +38,7 @@ export default {
       menuItems: [
         { name: "Summary", to: "" },
         { name: "Domains", to: "/domains" },
+        { name: "SSL/TLS", to: "/ssl" },
         { name: "PHP", to: "/php" },
         { name: "Security", to: "/security" },
         { name: "Backup", to: "/backup", class: "backup" },

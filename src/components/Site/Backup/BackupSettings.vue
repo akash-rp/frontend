@@ -243,6 +243,7 @@
       </button>
     </div>
   </section>
+  <hr class="border" />
   <RemoteBackupSettings></RemoteBackupSettings>
 </template>
 

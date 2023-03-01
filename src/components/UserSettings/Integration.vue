@@ -20,7 +20,10 @@
         Add API
       </button>
     </template>
-    <add-integration @close="showAddIntegrationModal = false"></add-integration>
+    <add-integration
+      @close="showAddIntegrationModal = false"
+      @setIntegrations="setIntegrations"
+    ></add-integration>
   </a-modal>
   <div class="w-full shadow bg-white">
     <div class="">
@@ -96,7 +99,7 @@
         </Column>
         <Column
           field="name"
-          header="Name"
+          header="Label"
           bodyStyle="padding-left:0px;width:25%"
           headerStyle="padding-left:0px;background-color:#eff3f8;"
           bodyClass="font-bold"
@@ -140,6 +143,9 @@ export default {
       deep: true,
       handler() {
         this.integrations = [];
+        for (let api of this.$store.state.integrations.dns) {
+          this.integrations.push(api);
+        }
         for (let api of this.$store.state.integrations.backup) {
           this.integrations.push(api);
         }
@@ -150,6 +156,11 @@ export default {
     this.$axios.get("/integration").then((res) => {
       this.$store.commit("setUserIntegration", res.data);
     });
+  },
+  methods: {
+    setIntegrations(data) {
+      this.$store.commit("setUserIntegration", data);
+    },
   },
 };
 </script>

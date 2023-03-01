@@ -42,6 +42,10 @@ export default {
           to: "/site/" + this.$route.params.siteid + "/backup/",
         },
         {
+          label: "Remote Backup",
+          to: "/site/" + this.$route.params.siteid + "/backup/remote",
+        },
+        {
           label: "Settings",
           to: "/site/" + this.$route.params.siteid + "/backup/settings",
         },

@@ -478,13 +478,14 @@ export default {
       }
     },
     showWildcard(domain, type) {
-      console.log(type);
       if (!domain.isSubDomain) {
         this.wildcard.url = domain.url;
         this.wildcard.status = domain.wildcard;
         this.wildcard.type = type;
         this.isShowWildcard = true;
         console.log(this.wildcard);
+        domain.wildcard = !domain.wildcard;
+      } else {
         domain.wildcard = !domain.wildcard;
       }
     },

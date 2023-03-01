@@ -81,6 +81,10 @@ export default {
         });
     },
   },
+  created() {
+    console.log("Server created");
+    this.getServerInfo();
+  },
 };
 </script>
 

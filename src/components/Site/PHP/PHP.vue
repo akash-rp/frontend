@@ -1,33 +1,31 @@
 <template>
-  <div class="main_bg">
-    <section class="php">
-      <h1 class="header">PHP</h1>
-      <div class="px-5 pb-5 flex flex-row items-center">
-        <p class="inline-block font-primary font-medium mr-2">PHP Version</p>
-        <a-select
-          ref="select"
-          v-bind:value="selected"
-          style="width: 120px"
-          :options="options"
-          :disabled="selectDisabled"
-          :loading="selectDisabled"
-        ></a-select>
-        <div class="vld-parent">
-          <button
-            class="px-2 py-1 ml-2 rounded bg-indigo-700 text-white vld-parent"
-            v-if="showUpdateButton && !selectDisabled"
-            @click="updatePhpVersion"
-          >
-            Update
-          </button>
-        </div>
+  <section class="php">
+    <h1 class="header">PHP</h1>
+    <div class="px-5 pb-5 flex flex-row items-center">
+      <p class="inline-block font-primary font-medium mr-2">PHP Version</p>
+      <a-select
+        ref="select"
+        v-bind:value="selected"
+        style="width: 120px"
+        :options="options"
+        :disabled="selectDisabled"
+        :loading="selectDisabled"
+      ></a-select>
+      <div class="vld-parent">
+        <button
+          class="px-2 py-1 ml-2 rounded bg-indigo-700 text-white vld-parent"
+          v-if="showUpdateButton && !selectDisabled"
+          @click="updatePhpVersion"
+        >
+          Update
+        </button>
       </div>
-    </section>
-    <tab-view>
-      <TabPanel header="PHP INI Settings"><PhpIni></PhpIni></TabPanel>
-      <TabPanel header="PHP Settings"><PhpSettings></PhpSettings></TabPanel>
-    </tab-view>
-  </div>
+    </div>
+  </section>
+  <tab-view>
+    <TabPanel header="PHP INI Settings"><PhpIni></PhpIni></TabPanel>
+    <TabPanel header="PHP Settings"><PhpSettings></PhpSettings></TabPanel>
+  </tab-view>
 </template>
 
 <script>
@@ -96,13 +94,10 @@ export default {
     updatePhpVersion() {
       this.selectDisabled = true;
       this.$axios
-        .post(
-          "/site/" + this.$route.params.siteid + "/changePHP",
-          {
-            php: this.selected,
-            serverid: this.$store.state.currentSite.serverId,
-          }
-        )
+        .post("/site/" + this.$route.params.siteid + "/changePHP", {
+          php: this.selected,
+          serverid: this.$store.state.currentSite.serverId,
+        })
         .then(() => {
           this.$store.commit("setCurrentPHP", this.selected);
           this.showUpdateButton = false;
@@ -117,6 +112,7 @@ export default {
     },
   },
   created() {
+    console.log("PHP Cresyed");
     this.selected = this.$store.state.currentSite.php;
   },
 };

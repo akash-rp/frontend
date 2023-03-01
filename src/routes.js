@@ -15,6 +15,7 @@ import PHP from "./components/Site/PHP/PHP.vue";
 import Backup from "./components/Site/Backup/Backup.vue";
 import BackupSettings from "./components/Site/Backup/BackupSettings.vue";
 import BackupListLocal from "./components/Site/Backup/LocalBackupList.vue";
+import RemoteBackupList from "./components/Site/Backup/RemoteBackupList.vue";
 import Staging from "./components/Site/Staging/Staging.vue";
 import ServerHealth from "./components/Server/Health.vue";
 import Services from "./components/Server/Services.vue";
@@ -28,6 +29,7 @@ import SiteTools from "./components/Site/Tools.vue";
 import DNS from "./components/DnsManagement/Dns.vue";
 import UserSettings from "./components/UserSettings/UserSettings.vue";
 import Integration from "./components/UserSettings/Integration.vue";
+import SSL from "./components/Site/SSL/ssl.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -119,6 +121,7 @@ const router = createRouter({
               name: "backupSettings",
             },
             { path: "", component: BackupListLocal, name: "backup" },
+            { path: "remote", component: RemoteBackupList },
           ],
         },
         {
@@ -137,9 +140,14 @@ const router = createRouter({
           path: "tools",
           component: SiteTools,
         },
+        {
+          path: "ssl",
+          component: SSL,
+        },
       ],
     },
     { path: "/dns-management", component: DNS },
+    { path: "/sites", component: Servers },
   ],
   linkExactActiveClass: "active",
   linkActiveClass: "link-active",

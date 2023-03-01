@@ -1,11 +1,7 @@
 <template>
   <Nav v-if="show"></Nav>
   <div class="ml-72 mr-8" v-if="show">
-    <router-view v-slot="{ Component }">
-      <keep-alive exclude="backupSettings">
-        <component :is="Component" />
-      </keep-alive>
-    </router-view>
+    <router-view></router-view>
   </div>
   <Login v-if="this.$route.name === 'login'"></Login>
 </template>
