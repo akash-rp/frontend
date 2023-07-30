@@ -4,12 +4,9 @@ export default {
   methods: {
     getServersList() {
       axios
-        .post("/servers", {
-          userId: localStorage.id,
-        })
-
+        .get("/servers")
         .then((res) => {
-          this.$store.commit("setServers", res.data);
+          this.$store.commit("setServers", res.data.servers);
         })
         .catch((err) => (this.error = err));
     },

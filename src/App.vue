@@ -3,12 +3,13 @@
   <div class="ml-72 mr-8" v-if="show">
     <router-view></router-view>
   </div>
-  <Login v-if="this.$route.name === 'login'"></Login>
+  <Login v-if="$route.name === 'login'"></Login>
 </template>
 
 <script>
 import Nav from "./components/Nav/Nav.vue";
 import Login from "./components/Auth/Login.vue";
+
 export default {
   data() {
     return {
@@ -26,13 +27,12 @@ export default {
   },
   async created() {
     await this.$axios
-      .get("http://localhost:4000/sessions/whoami")
+      .get("/auth/getUserDetails")
       .then((res) => {
         this.$store.commit("setUser", res.data);
         // this.$router.push("/servers");
       })
       .catch(() => {
-        console.log("catched");
         this.$router.push("/login");
       })
       .finally(() => {

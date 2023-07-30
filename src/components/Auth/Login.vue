@@ -33,6 +33,8 @@
 </template>
 
 <script>
+import { KRATOS_URL } from '../../constants';
+
 export default {
   data() {
     return {
@@ -45,7 +47,7 @@ export default {
     loginSubmit() {
       this.$axios
         .post(
-          "http://localhost:4000/self-service/login?flow=" + this.flow.id,
+          "auth/login?flow=" + this.flow.id,
           {
             method: "password",
             csrf_token: this.token,
@@ -64,7 +66,7 @@ export default {
   },
   created() {
     this.$axios
-      .get("http://localhost:4000/self-service/login/browser", {
+      .get("auth/flow/login", {
         Headers: {
           accept: "application/json",
         },

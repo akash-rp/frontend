@@ -1,7 +1,7 @@
 import axios from "axios";
 import router from "./routes";
 const instance = axios.create({
-  baseURL: "http://localhost/",
+  baseURL: "http://127.0.0.1:4200/",
   headers: {
     "Content-Type": "application/json",
   },

@@ -444,10 +444,11 @@ export default {
       this.$axios
         .get("/server/" + this.$route.params.serverid + "/health")
         .then((res) => {
-          var cpu = res.data["cpu"].map((data) => Object.values(data));
-          var memory = res.data["memory"].map((data) => Object.values(data));
-          var load = res.data["load"].map((data) => Object.values(data));
-          var disk = res.data["disk"].map((data) => Object.values(data));
+          const health = res.data.health
+          var cpu = health["cpu"].map((data) => Object.values(data));
+          var memory = health["memory"].map((data) => Object.values(data));
+          var load = health["load"].map((data) => Object.values(data));
+          var disk = health["disk"].map((data) => Object.values(data));
 
           this.metrics = {
             cpu: [{ data: cpu }],
@@ -456,7 +457,8 @@ export default {
             disk: [{ data: disk }],
           };
         })
-        .catch(() => {
+        .catch((err) => {
+          console.log(err)
           this.fetchError = true;
           this.toast.error("Failed to fetch Server Health");
         });
@@ -484,7 +486,7 @@ export default {
   activated() {
     this.$nextTick(() => {
       this.renderChart = true;
-    }),
+    });
       this.fetchMetrics();
   },
   deactivated() {

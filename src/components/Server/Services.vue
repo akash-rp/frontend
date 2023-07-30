@@ -125,7 +125,7 @@ export default {
       this.$axios
         .get("/server/" + this.$route.params.serverid + "/service/status")
         .then((res) => {
-          this.services = res.data;
+          this.services = res.data.services;
         })
         .catch(() => {
           this.toast.error("Failed to fetch services");

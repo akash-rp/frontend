@@ -181,10 +181,10 @@ export default {
     logout() {
       console.log("logging out");
       this.$axios
-        .get("http://localhost:4000/self-service/logout/browser")
+        .get("auth/flow/logout")
         .then((res) => {
           this.$axios
-            .get(res.data.logout_url)
+            .get("auth/logout?token="+res.data.logout_token)
             .then(() => {
               this.$store.state.user = undefined;
               this.$router.push("/login");
