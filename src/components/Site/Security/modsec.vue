@@ -71,6 +71,7 @@
 import Button from "primevue/button";
 
 export default {
+  name:"ModSec",
   components: { Button },
   data() {
     return {
@@ -90,12 +91,13 @@ export default {
       threshold: 5,
     };
   },
+  props:["firewall"],
   methods: {
     updateModsec() {
       this.loading["update"] = true;
       this.$axios
         .post(
-          "/site/" + this.$route.params.siteid + "/firewall/modsec/update",
+          "/site/" + this.$route.params.siteid + "/updateModSecurityFirewall",
           {
             enabled: this.enabled,
             paranoiaLevel: this.level,
@@ -115,11 +117,11 @@ export default {
     },
   },
   created() {
-    this.enabled = this.$store.state.currentSite.firewall.modsecurity.enabled;
+    this.enabled = this.firewall.modsecurity.enabled;
     this.level =
-      this.$store.state.currentSite.firewall.modsecurity.paranoiaLevel;
+      this.firewall.modsecurity.paranoiaLevel;
     this.threshold =
-      this.$store.state.currentSite.firewall.modsecurity.anomalyThreshold;
+      this.firewall.modsecurity.anomalyThreshold;
   },
 };
 </script>

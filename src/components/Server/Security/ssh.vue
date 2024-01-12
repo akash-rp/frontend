@@ -69,7 +69,7 @@ export default {
   },
   created() {
     this.$axios
-      .get("/server/" + this.$route.params.serverid + "/ssh/users")
+      .get("/server/" + this.$route.params.serverid + "/ssh")
       .then((res) => {
         this.session = res.data;
       })
@@ -80,7 +80,7 @@ export default {
   methods: {
     killSession(data) {
       return this.$axios
-        .post("/server/" + this.$route.params.serverid + "/ssh/kill", {
+        .delete("/server/" + this.$route.params.serverid + "/ssh", {
           id: data.id,
         })
         .then((res) => {

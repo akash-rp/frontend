@@ -187,8 +187,8 @@ export default {
       this.loader[data.user] = true;
 
       this.$axios
-        .post(
-          "/server/" + this.$route.params.serverid + "/users/changePassword",
+        .patch(
+          "/server/" + this.$route.params.serverid + "/users",
           {
             user: data.user,
             password: data.password,
@@ -211,8 +211,8 @@ export default {
       console.log(data);
       this.loader[data.user] = true;
       this.$axios
-        .post(
-          "/server/" + this.$route.params.serverid + "/users/delete",
+        .delete(
+          "/server/" + this.$route.params.serverid + "/users",
           {
             user: data.user,
           },

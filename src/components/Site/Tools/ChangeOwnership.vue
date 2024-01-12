@@ -1,4 +1,10 @@
 <template>
+  <a-select
+      v-model:value="owner.selected"
+      class="w-full"
+      :options="users"
+      placeholder="Select User"
+  ></a-select>
   <a-form
     class="px-5"
     :model="owner"
@@ -10,22 +16,17 @@
     layout="vertical"
   >
     <a-form-item
-      label="User"
+      label=""
       name="selected"
       class="grow"
       :rules="[{ required: true, message: 'Please Select User' }]"
     >
-      <a-select
-        v-model:value="owner.selected"
-        class="w-full"
-        :loading="fetchUsers"
-        :options="users"
-      ></a-select>
+
     </a-form-item>
     <a-form-item
       label="New User"
       name="newUser"
-      v-if="owner.selected == 'createNewUser'"
+      v-if="owner.selected === 'createNewUser'"
       :rules="[{ required: true, message: 'Enter New User' }]"
     >
       <a-input
@@ -43,7 +44,7 @@ export default {
   data() {
     return {
       owner: {
-        selected: "",
+        selected: undefined,
         newUser: "",
       },
       fetchUsers: false,

@@ -91,19 +91,16 @@ export default {
       },
     };
   },
+  props:["firewall"],
   watch: {
     enabled(data) {
       Object.keys(this.waf).forEach((key) => {
-        this.waf[key] = data;
+        this.waf[key] = this.firewall.sevenG.disable.includes(key) ? false : data
       });
     },
   },
   created() {
-    console.log("next error");
-    this.enabled = this.$store.state.currentSite.firewall.sevenG.enabled;
-    this.$store.state.currentSite.firewall.sevenG.disable.forEach((item) => {
-      this.waf[item] = false;
-    });
+    this.enabled = this.firewall.sevenG.enabled;
   },
   methods: {
     update7g() {
@@ -114,10 +111,9 @@ export default {
           disable.push(key);
         }
       }
-      console.log("before axios");
       this.$axios
         .post(
-          "/site/" + this.$route.params.siteid + "/firewall/sevenG/update",
+          "/site/" + this.$route.params.siteid + "/updateSevenGFirewall",
           {
             enabled: this.enabled,
             disable: disable,

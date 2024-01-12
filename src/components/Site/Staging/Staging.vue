@@ -155,7 +155,6 @@ import CreateStaging from "./CreateStaging.vue";
 import syncChanges from "./syncChanges.vue";
 import DeleteStaging from "./DeleteStaging.vue";
 import Tag from "primevue/tag";
-
 export default {
   components: { CreateStaging, syncChanges, DeleteStaging, Tag },
   data() {

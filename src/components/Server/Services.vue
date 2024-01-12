@@ -76,7 +76,7 @@
                 <div class="">Stop</div>
               </div>
             </div>
-            <div v-if="!data.running" class="w-fit">
+            <div v-if="!data.running && data.service !== 'PHP'" class="w-fit">
               <div
                 class="flex flex-row items-center p-1 rounded control cursor-pointer text-green-800"
                 @click="controlService(data, 'start')"
@@ -123,7 +123,7 @@ export default {
   methods: {
     getServices() {
       this.$axios
-        .get("/server/" + this.$route.params.serverid + "/service/status")
+        .get("/server/" + this.$route.params.serverid + "/services")
         .then((res) => {
           this.services = res.data.services;
         })
@@ -133,16 +133,17 @@ export default {
     },
     controlService(data, control) {
       this.$axios
-        .post(
+        .patch(
           "/server/" +
             this.$route.params.serverid +
-            "/service/" +
-            control +
-            "/" +
-            data.process
+            "/service",
+            {
+              action: control,
+              service: data.process
+            }
         )
         .then((res) => {
-          this.services = res.data;
+          this.services = res.data.services;
           this.toast.success(data.service + " " + control + "ed");
         })
         .catch(() => {

@@ -31,7 +31,7 @@
         :rowHover="true"
         dataKey="index"
         v-model:filters="filters1"
-        :globalFilterFields="['label', 'user', 'key']"
+        :globalFilterFields="['label', 'username', 'key']"
         :responsive="true"
       >
         <template #loading> Loading records, please wait... </template>
@@ -77,7 +77,7 @@
           </div>
         </template>
         <Column header="Label" field="label"> </Column>
-        <Column header="User" field="user"> </Column>
+        <Column header="User" field="username"> </Column>
         <Column
           header="Public Key"
           field="key"
@@ -129,10 +129,9 @@ import DataTable from "primevue/datatable";
 import Column from "primevue/column";
 import { FilterMatchMode } from "primevue/api";
 import AddSshKey from "./AddSshKey.vue";
-import dayjs from "dayjs";
 
 export default {
-  components: { DataTable, Column, AddSshKey, AddSshKey },
+  components: { DataTable, Column, AddSshKey },
   data() {
     return {
       showAddSshModal: false,
@@ -149,12 +148,15 @@ export default {
       this.$toast.success("SSH Key Added");
     },
     addedOn(data) {
-      return window.dayjs(data.addedOn).fromNow();
+      if (!data.timestamp) {
+        return "-";
+      }
+      return window.dayjs(data.timestamp).fromNow();
     },
     async deleteSshKey(data) {
       return this.$axios
-        .post(
-          "/server/" + this.$route.params.serverid + "/sshKey/remove",
+        .delete(
+          "/server/" + this.$route.params.serverid + "/sshKey",
           {
             label: data.label,
             user: data.user,

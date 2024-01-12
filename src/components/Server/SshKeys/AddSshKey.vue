@@ -70,13 +70,13 @@ export default {
   data() {
     return {
       fieldErrors: {
-        label: { status: undefined, messgage: undefined },
-        user: { status: undefined, messgage: undefined },
-        key: { status: undefined, messgage: undefined },
+        label: { status: undefined, message: undefined },
+        user: { status: undefined, message: undefined },
+        key: { status: undefined, message: undefined },
       },
       key: {
-        label: "",
-        key: "",
+        label: '',
+        key: '',
         user: undefined,
       },
       rules: {
@@ -106,7 +106,7 @@ export default {
   created() {
     this.loading["users"] = true;
     this.$axios
-      .get("/server/" + this.$route.params.serverid + "/users/")
+      .get("/server/" + this.$route.params.serverid + "/users")
       .then((res) => {
         for (let i = 0; i < res.data.length; i++) {
           console.log(this);
@@ -124,7 +124,7 @@ export default {
       validate()
         .then(() => {
           return this.$axios.post(
-            "/server/" + this.$route.params.serverid + "/sshKey/add",
+            "/server/" + this.$route.params.serverid + "/sshKey",
             {
               ...this.key,
             },
@@ -140,21 +140,22 @@ export default {
           this.$emit("keys", res.data);
         })
         .catch((error) => {
+          console.log(error)
           if (error.response) {
             let data = error.response.data; // => the response payload
             //   console.log(res);
             console.log(data);
             this.fieldErrors = {
-              label: { status: undefined, messgage: undefined },
-              user: { status: undefined, messgage: undefined },
-              key: { status: undefined, messgage: undefined },
+              label: { status: undefined, message: undefined },
+              user: { status: undefined, message: undefined },
+              key: { status: undefined, message: undefined },
             };
             this.fieldErrors[data.error.field] = {
               status: "error",
               message: data.error.message,
             };
           } else {
-            this.$toast.error("Someting went wrong while adding SSH key");
+            this.$toast.error("Failed to add SSH key");
           }
         });
     },

@@ -55,11 +55,29 @@
   .cell {
     @apply p-5;
   }
-  .ant-modal-header .ant-modal-title {
-    @apply text-xl font-bold;
+  .ant-modal-header .ant-modal-title, .ant-modal-confirm-title {
+    @apply text-xl font-bold !important;
   }
+
 
   .input {
     @apply w-1/2 p-1 border hover:border-indigo-700 focus:outline-indigo-700 rounded border-gray-300;
   }
+}
+
+.ant-modal-confirm-content {
+  max-width: 100% !important;
+}
+
+.ant-tabs-tab-btn {
+  padding: 0 15px !important;
+  font-weight: bold;
+}
+
+.ant-tabs-tab {
+  margin: 0 !important;
+}
+
+.ant-tabs-content {
+  padding: 0 20px 10px 20px;
 }

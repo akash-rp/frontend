@@ -6,7 +6,7 @@ const store = createStore({
     return {
       user: {},
       servers: [],
-      sites: {},
+      sites: [],
       currentSite: {},
       currentServer: {
         stats: {
@@ -22,7 +22,6 @@ const store = createStore({
         },
       },
       cpuMetrics: [{ data: [] }],
-      user: undefined,
       cloudflare: {
         api: [],
         zones: [],
@@ -45,10 +44,14 @@ const store = createStore({
       state.currentServer = server;
     },
     setSites(state, sites) {
-      state.sites = Object.assign(state.sites, sites);
+      console.log(sites)
+      state.sites = sites;
     },
     setCurrentSite(state, site) {
       state.currentSite = site;
+    },
+    setCurrentSiteDomain(state, domains) {
+      state.currentSite.domains = domains
     },
     setCurrentPHP(state, php) {
       state.currentSite.php = php;
@@ -87,6 +90,9 @@ const store = createStore({
     setUserIntegration(state, data) {
       state.integrations = data;
     },
+    deleteDomain(state, data) {
+      state.currentSite.domains = state.currentSite.domains.filter((domain) => domain.id !== data);
+    }
   },
   actions: {
     getSites({ commit }, route) {
@@ -95,6 +101,15 @@ const store = createStore({
         .then((res) => commit("setSites", res.data));
     },
   },
+  getters:{
+    sites:(state) => (id) => {
+      if (typeof state.sites.filter === "function") {
+        return state.sites?.filter(site => site?.serverId === id);
+      }
+      return []
+    }
+  }
+
 });
 
 export default store;

@@ -5,7 +5,7 @@
       <p class="inline-block font-primary font-medium mr-2">PHP Version</p>
       <a-select
         ref="select"
-        v-bind:value="selected"
+        v-model:value="selected"
         style="width: 120px"
         :options="options"
         :disabled="selectDisabled"
@@ -22,25 +22,26 @@
       </div>
     </div>
   </section>
-  <tab-view>
-    <TabPanel header="PHP INI Settings"><PhpIni></PhpIni></TabPanel>
-    <TabPanel header="PHP Settings"><PhpSettings></PhpSettings></TabPanel>
-  </tab-view>
+  <a-tabs v-model:activeKey="activeTab">
+    <a-tab-pane key="1" tab="PHP INI Settings"><PhpIni></PhpIni></a-tab-pane>
+    <a-tab-pane key="2" tab="PHP Settings"><PhpSettings></PhpSettings></a-tab-pane>
+  </a-tabs>
 </template>
 
 <script>
 import TabView from "primevue/tabview";
 import TabPanel from "primevue/tabpanel";
 import { Select } from "ant-design-vue";
-import "ant-design-vue/lib/select/style/index.css";
 
 import { useToast } from "vue-toastification";
 import PhpIni from "./PhpIni.vue";
 import PhpSettings from "./PhpSettings.vue";
+import {ref} from 'vue';
 export default {
   setup() {
     const toast = useToast();
-    return { toast };
+    const activeTab = ref('1')
+    return { toast, activeTab };
   },
   components: {
     ASelect: Select,
@@ -81,6 +82,7 @@ export default {
   },
   watch: {
     selected() {
+      console.log("selected",this.selected)
       if (this.selected != "") {
         if (this.selected != this.currentPHP) {
           this.showUpdateButton = true;

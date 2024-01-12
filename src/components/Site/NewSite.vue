@@ -87,7 +87,7 @@ export default {
   methods: {
     addSite() {
       this.$axios
-        .post("/addsite/" + this.$route.params.serverid, {
+        .post("/site/add/" + this.$route.params.serverid, {
           appName: this.name,
           url: this.domain,
           userName: this.user,

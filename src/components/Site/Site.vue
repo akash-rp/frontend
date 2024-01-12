@@ -16,7 +16,7 @@
       </svg>
       <h1 class="text-3xl font-semibold">{{ site.name }}</h1>
     </header>
-    <main class="flex" v-if="!loading">
+    <main class="flex items-start" v-if="!loading">
       <settings :menuItems="menuItems" type="site"></settings>
       <div class="w-full bg-white rounded shadow">
         <router-view></router-view>

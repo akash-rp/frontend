@@ -126,22 +126,22 @@ export default {
         return [];
       }
       let domains = [];
-      if (
-        this.list.find(
-          (cert) =>
-            cert.name == this.$store.state.currentSite.domain.primary.url
-        )
-      ) {
-        domains.push({
-          value: this.$store.state.currentSite.domain.primary.url,
-          disabled: true,
-        });
-      } else {
-        domains.push({
-          value: this.$store.state.currentSite.domain.primary.url,
-        });
-      }
-      for (const domain of this.$store.state.currentSite.domain.alias) {
+      // if (
+      //   this.list.find(
+      //     (cert) =>
+      //       cert.name == this.$store.state.currentSite.domain.primary.url
+      //   )
+      // ) {
+      //   domains.push({
+      //     value: this.$store.state.currentSite.domain.primary.url,
+      //     disabled: true,
+      //   });
+      // } else {
+      //   domains.push({
+      //     value: this.$store.state.currentSite.domain.primary.url,
+      //   });
+      // }
+      for (const domain of this.$store.state.currentSite.domains) {
         if (this.list.find((cert) => cert.name == domain.url)) {
           domains.push({ value: domain.url, disabled: true });
         } else {

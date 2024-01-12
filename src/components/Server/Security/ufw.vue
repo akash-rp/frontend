@@ -134,7 +134,7 @@ export default {
 
   created() {
     this.$axios
-      .get("server/" + this.$route.params.serverid + "/ufw/rules")
+      .get("server/" + this.$route.params.serverid + "/ufw")
       .then((res) => {
         this.ufw = res.data;
         this.modifyUfw(res.data);
@@ -151,7 +151,7 @@ export default {
         var index = data.Index;
       }
       this.$axios
-        .post("/server/" + this.$route.params.serverid + "/ufw/delete", {
+        .delete("/server/" + this.$route.params.serverid + "/ufw", {
           index: index,
         })
         .then((res) => {

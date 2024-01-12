@@ -6,7 +6,7 @@
         <p>Domain</p>
         <input
           class="bg-gray-100 p-1 px-2 rounded"
-          :value="site.domain.primary.url"
+          :value="primaryDomain.url"
           disabled
         />
       </div>
@@ -48,7 +48,7 @@
         <input
           class="bg-gray-100 p-1 px-2 rounded"
           disabled
-          :value="site.db.name"
+          :value="site?.db?.name"
         />
       </div>
       <div>
@@ -56,7 +56,7 @@
         <input
           class="bg-gray-100 p-1 px-2 rounded"
           disabled
-          :value="site.db.user"
+          :value="site?.db?.user"
         />
       </div>
     </div>
@@ -69,6 +69,9 @@ export default {
     site() {
       return this.$store.state.currentSite;
     },
+    primaryDomain() {
+      return this.$store.state.currentSite.domains.filter(domain => domain.type === 1)[0]
+    }
   },
 };
 </script>

@@ -17,7 +17,7 @@
           type="radio"
           id="alias"
           class="form-radio h-4 w-4 mr-2"
-          value="alias"
+          value=2
           v-model="type"
         />
         <label for="alias" class="text-xl mr-10">Alias</label>
@@ -27,7 +27,7 @@
           type="radio"
           id="redirect"
           class="form-radio h-4 w-4 mr-2"
-          value="redirect"
+          value=3
           v-model="type"
         />
         <label for="redirect" class="text-xl">Redirect</label>
@@ -45,7 +45,7 @@ export default {
   data() {
     return {
       url: "",
-      type: "alias",
+      type: 2,
       error: "",
     };
   },

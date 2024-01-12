@@ -3,20 +3,20 @@
     <div class="domain" @click.self="closeDeleteDomain" v-if="site.name">
       <!-- Add Domain -->
       <a-modal
-        v-model:visible="isShowAddDomain"
-        title="Add Domain"
-        style="border-radius: 1rem"
+          v-model:visible="isShowAddDomain"
+          title="Add Domain"
+          style="border-radius: 1rem"
       >
         <template #footer>
           <button
-            class="py-2 px-4 font-medium border border-black rounded"
-            @click="closeAddDomain"
+              class="py-2 px-4 font-medium border border-black rounded"
+              @click="closeAddDomain"
           >
             Cancel
           </button>
           <button
-            class="py-2 px-4 bg-indigo-700 text-white rounded pointer"
-            @click="addDomainFun"
+              class="py-2 px-4 bg-indigo-700 text-white rounded pointer"
+              @click="addDomainFun"
           >
             Add Domain
           </button>
@@ -24,11 +24,11 @@
         <div class="flex flex-col">
           <label for="url" class="font-semibold mb-3">Domain Name</label>
           <input
-            type="text"
-            id="url"
-            class="p-2 border border-gray-600 rounded"
-            v-model="addDomain.url"
-            ref="input"
+              type="text"
+              id="url"
+              class="p-2 border border-gray-600 rounded"
+              v-model="addDomain.url"
+              ref="input"
           />
         </div>
         <div class="flex flex-col mt-5">
@@ -36,21 +36,21 @@
           <div class="flex flex-row">
             <div class="flex flex-row items-center">
               <input
-                type="radio"
-                id="alias"
-                class="form-radio h-4 w-4 mr-2"
-                value="alias"
-                v-model="addDomain.type"
+                  type="radio"
+                  id="alias"
+                  class="form-radio h-4 w-4 mr-2"
+                  value=2
+                  v-model="addDomain.type"
               />
               <label for="alias" class="text-xl mr-10">Alias</label>
             </div>
             <div class="flex flex-row items-center">
               <input
-                type="radio"
-                id="redirect"
-                class="form-radio h-4 w-4 mr-2"
-                value="redirect"
-                v-model="addDomain.type"
+                  type="radio"
+                  id="redirect"
+                  class="form-radio h-4 w-4 mr-2"
+                  value=3
+                  v-model="addDomain.type"
               />
               <label for="redirect" class="text-xl">Redirect</label>
             </div>
@@ -58,101 +58,25 @@
         </div>
         <!-- <add-domain :site="site"></add-domain> -->
       </a-modal>
-      <!-- Delete Domain -->
-      <a-modal v-model:visible="isShowDeleteDomain" title="Delete Domain">
-        <template #footer>
-          <button
-            class="py-2 px-4 font-medium border border-black rounded"
-            @click="closeDeleteDomain"
-          >
-            Cancel
-          </button>
-          <button
-            class="py-2 px-4 bg-red-700 text-white rounded pointer"
-            @click="deleteDomain"
-          >
-            Delete Domain
-          </button>
-        </template>
-        <delete-domain
-          @delete="deleteDomain"
-          @cancel="isShowDeleteDomain == false"
-        >
-          <template #url>
-            <p class="inline font-bold">{{ url }}</p></template
-          >
-          <template #name
-            ><p class="inline font-bold">{{ site.name }}</p></template
-          >
-        </delete-domain>
-      </a-modal>
-      <!-- Routing -->
-      <a-modal v-model:visible="isShowRouting" title="Domain Routing">
-        <routing
-          :url="routeUrl"
-          :site="site"
-          :selected="selectedRoute"
-          @save="changeRoute"
-        ></routing>
-      </a-modal>
       <!-- Wildcard -->
       <a-modal v-model:visible="isShowWildcard" title="Wildcard Settings">
-        <template #footer>
-          <button
-            class="py-2 px-4 font-medium border border-black rounded"
-            @click="isShowWildcard = false"
-          >
-            Cancel
-          </button>
-          <button
-            class="py-2 px-4 bg-indigo-700 text-white rounded pointer"
-            @click="changeWildcard"
-          >
-            Add Wildcard
-          </button>
-        </template>
         <wildcard
-          :url="wildcard.url"
-          :status="!wildcard.status"
-          :site="site"
-          :type="wildcard.type"
-          @close="isShowWildcard = false"
+            :url="wildcard.url"
+            :status="!wildcard.status"
+            :site="site"
+            :type="wildcard.type"
+            @close="isShowWildcard = false"
         ></wildcard>
-      </a-modal>
-      <!-- change Primary -->
-      <a-modal
-        v-model:visible="isShowPrimary"
-        width="600px"
-        title="Primary Domain"
-      >
-        <template #footer>
-          <button
-            class="py-2 px-4 font-medium border border-black rounded"
-            @click="isShowPrimary = false"
-          >
-            Cancel
-          </button>
-          <button
-            class="py-2 px-4 bg-indigo-700 text-white rounded pointer"
-            @click="changePrimary"
-          >
-            Change Primary
-          </button>
-        </template>
-        <primary
-          @close="isShowPrimary = false"
-          :primaryUrl="toPrimaryUrl"
-        ></primary>
       </a-modal>
       <!-- Body -->
       <div class="flex flex-row justify-between items-center">
         <h1 class="header">Domain</h1>
-        <button
-          class="p-2 bg-indigo-700 text-white font-semibold rounded-md mr-5"
-          @click="showAddDomain"
+        <a-button
+            type="primary"
+            @click="showAddDomain"
         >
           Add Domain
-        </button>
+        </a-button>
       </div>
       <div class="px-5 pb-5">
         <p class="tagline">
@@ -162,95 +86,70 @@
       <div class="">
         <table class="w-full list">
           <thead class="">
-            <tr style="background-color: #eff3f8" class="text-left row">
-              <th class="cell">Domain Name</th>
-              <th class="cell">Domian Type</th>
-              <th class="cell">Routing</th>
-              <th class="cell">Wildcard</th>
-            </tr>
+          <tr style="background-color: #eff3f8" class="text-left row">
+            <th class="cell">Domain Name</th>
+            <th class="cell">Domian Type</th>
+            <th class="cell">Routing</th>
+            <th class="cell">Wildcard</th>
+          </tr>
           </thead>
           <tbody>
-            <tr class="row vld-parent">
-              <td class="cell">{{ site.domain.primary.url }}</td>
-              <td class="cell"><tag>Primary</tag></td>
-              <td class="cell">
-                <div
-                  class="border-2 border-indigo-700 w-fit px-2 -my-2 rounded text-indigo-700 font-medium"
-                  v-if="site.domain.primary.routing === 'root'"
-                  @click="
-                    showRouting(
-                      site.domain.primary.url,
-                      site.domain.primary.routing,
-                      site.domain.primary.subdomain
-                    )
-                  "
-                >
-                  Root
-                </div>
-                <div
-                  class="border-2 border-indigo-700 w-fit px-2 -my-2 rounded text-indigo-700 font-medium"
-                  v-if="site.domain.primary.routing === 'www'"
-                  @click="
-                    showRouting(
-                      site.domain.primary.url,
-                      site.domain.primary.routing,
-                      site.domain.primary.subdomain
-                    )
-                  "
-                >
-                  www
-                </div>
-              </td>
-              <td class="cell flex flex-row items-center">
-                <label class="switch ml-2">
-                  <input
-                    type="checkbox"
-                    v-model="site.domain.primary.wildcard"
-                    @change="showWildcard(site.domain.primary, 'primary')"
-                  />
-                  <span class="slider round"></span>
-                </label>
-                <div class="" v-if="loader[site.domain.primary.url] == true">
-                  <Loading
-                    class="hidden"
-                    active="true"
-                    :is-full-page="isActive"
-                    height="40"
-                    width="40"
-                    color="#4f46e5"
-                    z-index="0"
-                    loader="dots"
-                  />
-                </div>
-              </td>
-            </tr>
-            <tr
+          <tr
               class="row vld-parent"
-              v-for="(domain, i) in site.domain.alias"
+              v-for="(domain, i) in site.domains"
               :key="domain.url"
-            >
-              <td class="cell">{{ domain.url }}</td>
-              <td class="cell"><tag severity="warning">Alias</tag></td>
-              <td class="cell">
-                <div
+          >
+            <td class="cell">{{ domain.url }}</td>
+            <td class="cell">
+              <tag v-if="domain.type === 1">Primary</tag>
+              <tag severity="warning" v-if="domain.type === 2">Alias</tag>
+            </td>
+            <td class="cell">
+              <div
+                  class="border-2 border-indigo-700 w-fit px-2 -my-2 rounded text-indigo-700 font-medium"
+                  v-if="domain.routing === 'root' && domain.type === 1"
+                  @click="
+                    showRouting(
+                      domain.url,
+                      domain.routing,
+                      domain.subdomain
+                    )
+                  "
+              >
+                Root
+              </div>
+              <div
+                  class="border-2 border-indigo-700 w-fit px-2 -my-2 rounded text-indigo-700 font-medium"
+                  v-if="domain.routing === 'www' && domain.type === 1"
+                  @click="
+                    showRouting(
+                      domain.url,
+                      domain.routing,
+                      domain.subdomain
+                    )
+                  "
+              >
+                www
+              </div>
+              <div
                   class="border-2 w-fit px-2 -my-2 rounded text-gray-400 border-gray-400 font-medium"
-                  v-if="domain.routing === 'none'"
+                  v-if="domain.routing === 'none' && domain.type === 2"
                   @click="showRouting(data.url, data.routing, data.subdomain)"
-                >
-                  none
-                </div>
-              </td>
-              <td class="cell">
-                <label class="switch ml-2">
-                  <input
+              >
+                none
+              </div>
+            </td>
+            <td class="cell">
+              <label class="switch ml-2">
+                <input
                     type="checkbox"
-                    v-model="site.domain.alias[i].wildcard"
-                    @change="showWildcard(domain, 'alias')"
-                  />
-                  <span class="slider round"></span>
-                </label>
-                <div class="" v-if="loader[domain.url] == true">
-                  <Loading
+                    v-model="site.domains[i].wildcard"
+                    @change="showWildcard(domain, domain.type)"
+                />
+                <span class="slider round"></span>
+              </label>
+              <div class="" v-if="loader[domain.url] == true">
+                <Loading
                     class="hidden"
                     active="true"
                     :is-full-page="isActive"
@@ -259,71 +158,71 @@
                     color="#4f46e5"
                     z-index="0"
                     loader="dots"
-                  />
-                </div>
-              </td>
-              <td>
-                <a-dropdown :trigger="['click']">
-                  <a class="ant-dropdown-link" @click.prevent>
-                    <svg
+                />
+              </div>
+            </td>
+            <td>
+              <a-dropdown :trigger="['click']" v-if="domain.type !== 1">
+                <a class="ant-dropdown-link" @click.prevent>
+                  <svg
                       xmlns="http://www.w3.org/2000/svg"
                       class="h-6 w-6"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
                       stroke-width="2"
-                    >
-                      <path
+                  >
+                    <path
                         stroke-linecap="round"
                         stroke-linejoin="round"
                         d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
-                      />
-                    </svg>
-                  </a>
-                  <template #overlay>
-                    <a-menu @click="menuClick($event, domain.url)">
-                      <a-menu-item key="1">
-                        <div class="flex flex-row text-indigo-700 py-1">
-                          <svg
+                    />
+                  </svg>
+                </a>
+                <template #overlay>
+                  <a-menu @click="menuClick($event, domain)">
+                    <a-menu-item :key=1>
+                      <div class="flex flex-row text-indigo-700 py-1">
+                        <svg
                             xmlns="http://www.w3.org/2000/svg"
                             class="h-6 w-6 mr-2 text-indigo-700"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
                             stroke-width="2"
-                          >
-                            <path
+                        >
+                          <path
                               stroke-linecap="round"
                               stroke-linejoin="round"
                               d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
-                            />
-                          </svg>
-                          Make Primary
-                        </div>
-                      </a-menu-item>
-                      <a-menu-item key="2">
-                        <div class="flex flex-row text-red-700 py-1">
-                          <svg
+                          />
+                        </svg>
+                        Make Primary
+                      </div>
+                    </a-menu-item>
+                    <a-menu-item :key=2>
+                      <div class="flex flex-row text-red-700 py-1">
+                        <svg
                             xmlns="http://www.w3.org/2000/svg"
                             class="h-6 w-6 mr-2"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
                             stroke-width="2"
-                          >
-                            <path
+                        >
+                          <path
                               stroke-linecap="round"
                               stroke-linejoin="round"
                               d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                            />
-                          </svg>
-                          Delete Domain
-                        </div>
-                      </a-menu-item>
-                    </a-menu>
-                  </template>
-                </a-dropdown>
-              </td>
-            </tr>
+                          />
+                        </svg>
+                        Delete Domain
+                      </div>
+                    </a-menu-item>
+                  </a-menu>
+                </template>
+              </a-dropdown>
+            </td>
+          </tr>
           </tbody>
         </table>
       </div>
@@ -331,236 +230,187 @@
   </div>
 </template>
 
-<script>
-import DeleteDomain from "./DeleteDomain.vue";
-import AddDomain from "./AddDomain.vue";
-import Routing from "./Routing.vue";
-import Wildcard from "./Wildcard.vue";
-import Primary from "./Primary.vue";
-import DataTable from "primevue/datatable";
-import Column from "primevue/column";
-import Tag from "primevue/tag";
-import InputSwitch from "primevue/inputswitch";
-import Loading from "vue-loading-overlay";
-import { Modal } from "ant-design-vue";
-import "ant-design-vue/lib/modal/style/index.css";
-import "vue-loading-overlay/dist/vue-loading.css";
+<script setup>
+import {ref, computed, inject, provide} from 'vue';
+import Routing from './Routing.vue';
+import Tag from 'primevue/tag';
+import Loading from 'vue-loading-overlay';
+import 'vue-loading-overlay/dist/vue-loading.css';
+import {useStore} from 'vuex';
+import DeleteDomain from './DeleteDomain.vue';
+import PrimaryDomain from './PrimaryDomain.vue';
+import {ModalWrapper} from '../../Modal';
 
-export default {
-  data() {
-    return {
-      domainOptionUrl: "",
-      selectedUrl: "",
-      routeUrl: "",
-      selectedRoute: "",
-      isShowRouting: false,
-      isShowAddDomain: false,
-      isShowDeleteDomain: false,
-      isShowWildcard: false,
-      isShowPrimary: false,
-      wildcard: { url: "", status: "", type: "" },
-      toPrimaryUrl: "",
-      active: false,
-      isActive: false,
-      loader: {},
-      addDomain: {
-        type: "alias",
-      },
-    };
-  },
-  computed: {
-    site() {
-      return this.$store.state.currentSite;
-    },
-  },
-  components: {
-    AddDomain,
-    DeleteDomain,
-    Routing,
-    Wildcard,
-    Primary,
-    DataTable,
-    Column,
-    Tag,
-    InputSwitch,
-    Loading,
-    AModal: Modal,
-  },
-  methods: {
-    menuClick({ key }, url) {
-      if (key == 1) {
-        this.makePrimary(url);
-      } else {
-        this.showDeleteDomain(url);
-      }
-    },
-    changePrimary() {
-      this.isShowPrimary = false;
-      this.$axios
-        .post("/site/" + this.site.siteId + "/changePrimary", {
-          url: this.toPrimaryUrl,
-          serverid: this.site.serverId,
-        })
-        .then(() => {
-          let tempSite = this.site.domain.primary;
-          this.site.domain.primary = this.site.domain.alias.find((ali) => {
-            if (ali.url == this.toPrimaryUrl) return ali;
-          });
-          this.site.domain.alias = this.site.domain.alias.filter(
-            (ali) => ali.url != this.toPrimaryUrl
-          );
-          this.site.domain.alias.push(tempSite);
-          this.$toast.success("Successfully changed primary url");
-        })
-        .catch(() => {
-          this.$toast.error("Failed to change primary url");
-        });
-    },
-    log(event) {
-      console.log(event);
-    },
+// Data properties
+const store = useStore();
+const axios = inject('axios');
+const toast = inject('toast');
+const domainOptionUrl = ref('');
+const selectedUrl = ref('');
+const routeUrl = ref('');
+const selectedRoute = ref('');
+const isShowRouting = ref(false);
+const isShowAddDomain = ref(false);
+const isShowDeleteDomain = ref(false);
+const isShowWildcard = ref(false);
+const wildcard = ref({url: '', status: '', type: ''});
+const isActive = ref(false);
+const loader = ref({});
+const addDomain = ref({type: 2});
+const tempDomain = ref({});
+const modal = inject('modal');
 
-    showAddDomain() {
-      this.isShowAddDomain = true;
-    },
-    closeAddDomain() {
-      this.addDomain.url = "";
-      this.isShowAddDomain = false;
-    },
+// Computed property
+const site = computed(() => {
+  return store.state.currentSite;
+});
 
-    showDeleteDomain(selectedUrl) {
-      this.domainOptionUrl = "";
-      this.isShowDeleteDomain = true;
-      this.selectedUrl = selectedUrl;
-    },
-    closeDeleteDomain() {
-      this.isShowDeleteDomain = false;
-      this.selectedUrl = "";
-    },
-    deleteDomain() {
-      let deleteUrl = this.selectedUrl;
-      console.log(deleteUrl, this.site.serverId);
-      this.closeDeleteDomain();
-      this.loader[deleteUrl] = true;
+// Methods
+const menuClick = ({key}, domain) => {
+  if (key === 1) {
+    makePrimary(domain);
+  } else {
+    showDeleteDomain(domain);
+  }
+};
 
-      this.$axios
-        .post("/site/" + this.site.siteId + "/deleteDomain", {
-          url: deleteUrl,
-          serverid: this.site.serverId,
-        })
-        .then(() => {
-          this.site.domain.alias = this.site.domain.alias.filter((ali) => {
-            if (ali.url !== deleteUrl) {
-              return ali;
-            }
-          });
-          this.$toast.success("Domain deleted");
-        })
-        .catch(() => {
-          this.$toast.error("Failed to delete domain");
-        })
-        .finally(() => {
-          this.loader[deleteUrl] = false;
-        });
-    },
-    showOption(url) {
-      if (this.domainOptionUrl == url) {
-        this.domainOptionUrl = "";
-      } else if (url) {
-        this.domainOptionUrl = url;
-      }
-    },
-    showRouting(url, route, subDomain) {
-      if (!subDomain) {
-        this.routeUrl = url;
-        this.selectedRoute = route;
-        this.isShowRouting = true;
-      }
-    },
-    showWildcard(domain, type) {
-      if (!domain.isSubDomain) {
-        this.wildcard.url = domain.url;
-        this.wildcard.status = domain.wildcard;
-        this.wildcard.type = type;
-        this.isShowWildcard = true;
-        console.log(this.wildcard);
-        domain.wildcard = !domain.wildcard;
-      } else {
-        domain.wildcard = !domain.wildcard;
-      }
-    },
-    changeWildcard() {
-      let url = this.wildcard.url;
-      this.isShowWildcard = false;
-      this.loader[this.wildcard.url] = true;
-      this.$axios
-        .post("/site/" + this.$route.params.siteid + "/wildcard", {
-          serverid: this.site.serverId,
-          url: this.wildcard.url,
-          wildcard: this.wildcard.status,
-          type: this.wildcard.type,
-        })
-        .then((res) => {
-          this.isShowWildcard = false;
-          this.$store.commit("setCurrentSite", res.data);
-          this.loader[url] = false;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    },
-    changeRoute(routeType, url) {
-      this.$axios
-        .post("/site/" + this.site.siteId + "/changeRoute", {
-          url: url,
-          serverid: this.site.serverId,
-          type: routeType,
-        })
-        .then(() => {
-          if (this.site.domain.primary.url == url) {
-            this.site.domain.primary.routing = routeType;
-          } else {
-            for (let alias of this.site.domain.alias) {
-              if (alias.url == url) {
-                alias.routing = routeType;
-                break;
-              }
+const log = (event) => {
+  console.log(event);
+};
+
+const showAddDomain = () => {
+  isShowAddDomain.value = true;
+};
+
+const closeAddDomain = () => {
+  addDomain.value.url = '';
+  isShowAddDomain.value = false;
+};
+
+const showDeleteDomain = (domain) => {
+  modal.value = ModalWrapper({
+    title: 'Delete Domain',
+    component: DeleteDomain,
+    componentProps: {domain:domain},
+    modal: modal
+  });
+};
+
+const closeDeleteDomain = () => {
+  isShowDeleteDomain.value = false;
+  selectedUrl.value = '';
+};
+
+const showRouting = (url, route, subDomain) => {
+  if (!subDomain) {
+    routeUrl.value = url;
+    selectedRoute.value = route;
+    isShowRouting.value = true;
+  //   <routing
+  //           :url="routeUrl"
+  // :site="site"
+  // :selected="selectedRoute"
+  // @save="changeRoute"
+  //       ></routing>
+    modal.value = ModalWrapper({
+      title: 'Domain Routing',
+      component: Routing,
+      componentProps: {url: routeUrl, site: site, selected: selectedRoute},
+      modal: modal
+    });
+  }
+};
+
+const showWildcard = (domain, type) => {
+  if (!domain.subDomain) {
+    wildcard.value.status = domain.wildcard;
+    wildcard.value.type = type;
+    wildcard.value.id = domain.id;
+    isShowWildcard.value = true;
+    console.log(wildcard.value);
+    domain.wildcard = !domain.wildcard;
+  } else {
+    domain.wildcard = !domain.wildcard;
+  }
+};
+
+const changeWildcard = () => {
+  let url = wildcard.value.url;
+  isShowWildcard.value = false;
+  loader.value[wildcard.value.url] = true;
+  axios
+      .post('/site/' + this.$route.params.siteid + '/wildcard', {
+        id: wildcard.value.id,
+        wildcard: wildcard.value.status,
+        type: wildcard.value.type
+      })
+      .then((res) => {
+        isShowWildcard.value = false;
+        store.commit('setCurrentSiteDomain', res.data);
+        loader.value[url] = false;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+};
+
+const changeRoute = (routeType, url) => {
+  axios
+      .post('/site/' + site.value.siteId + '/changeRoute', {
+        url: url,
+        serverid: site.value.serverId,
+        type: routeType
+      })
+      .then(() => {
+        if (site.value.domains[0].url == url) {
+          site.value.domains[0].routing = routeType;
+        } else {
+          for (let alias of site.value.domain.alias) {
+            if (alias.url == url) {
+              alias.routing = routeType;
+              break;
             }
           }
-          this.$store.commit("setCurrentSite", this.site);
-          this.isShowRouting = false;
-        })
-        .catch(() => {
-          this.$toast.error("Failed to change route");
-        });
-    },
-    makePrimary(url) {
-      this.toPrimaryUrl = url;
-      this.isShowPrimary = true;
-    },
-    addDomainFun() {
-      this.isShowAddDomain = false;
+        }
+        store.commit('setCurrentSiteDomain', site.value);
+        isShowRouting.value = false;
+      })
+      .catch(() => {
+        toast.error('Failed to change route');
+      });
+};
 
-      this.$axios
-        .post("/site/" + this.site.siteId + "/addDomain", {
-          url: this.addDomain.url,
-          type: this.addDomain.type,
-          id: this.site.serverId,
-        })
-        .then((res) => {
-          this.$store.commit("setCurrentSite", res.data);
-          this.$toast.success("Domain added");
-        })
-        .catch(() => {
-          this.$toast.error("Failed to add Domain");
-        })
-        .finally(() => {
-          this.addDomain.url = "";
-        });
-    },
-  },
+const makePrimary = (domain) => {
+  tempDomain.value = domain;
+  modal.value = ModalWrapper({
+    title: 'Change primary',
+    component: PrimaryDomain,
+    componentProps: {domain:tempDomain.value, site: store.state.currentSite},
+    modal: modal
+  });
+};
+
+const addDomainFun = () => {
+  isShowAddDomain.value = false;
+
+  axios
+      .post('/site/' + site.value.id + '/domain', {
+        url: addDomain.value.url,
+        type: addDomain.value.type
+      })
+      .then((res) => {
+        store.commit('setCurrentSiteDomain', res.data);
+        toast.success('Domain added');
+      })
+      .catch(() => {
+        toast.error('Failed to add Domain');
+      })
+      .finally(() => {
+        addDomain.value.url = '';
+      });
 };
 </script>
+
 
 <style lang="scss">
 .switch {
@@ -604,6 +454,7 @@ export default {
 input:checked + .slider {
   background-color: #4f46e5;
 }
+
 input:focus + .slider {
   box-shadow: 0 0 1px #2196f3;
 }
@@ -617,17 +468,22 @@ input:checked + .slider:before {
   -ms-transform: translateX(1.25rem);
   transform: translateX(1.25rem);
 }
+
 .slider.round {
   border-radius: 34px;
 }
+
 .slider.round:before {
   border-radius: 50%;
 }
+
 .name {
   width: 30%;
 }
+
 .type {
   width: 10%;
+
   &_btn {
     background: royalblue;
     padding: 5px 7px;
@@ -637,18 +493,23 @@ input:checked + .slider:before {
     border-radius: 3px;
   }
 }
+
 .dns {
   width: 5%;
 }
+
 .ssl {
   width: 10%;
 }
+
 .routing {
   width: 15%;
 }
+
 .wildcard {
   width: 10%;
 }
+
 .int {
   width: 10%;
 }
@@ -656,6 +517,7 @@ input:checked + .slider:before {
 .nopointer {
   cursor: not-allowed;
 }
+
 table.list {
   table-layout: auto;
   width: 100%;

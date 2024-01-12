@@ -17,7 +17,7 @@
         selectionMode="single"
         @rowSelect="onSiteRowSelect"
         v-model:filters="filters1"
-        :globalFilterFields="['name', 'domain.primary.url', 'user']"
+        :globalFilterFields="['name', 'domains', 'user']"
       >
         <template #empty>
           <div class="">No Sites available</div>
@@ -63,13 +63,13 @@
         >
         </Column>
         <Column
-          field="domain.primary.url"
+          field="domains"
           header="Primary Domain"
           headerStyle="background-color:#eff3f8;"
           bodyClass=""
         >
           <template #body="{ data }">
-            {{ data.domain.primary.url }}
+            {{ data.domains[0].url}}
           </template>
         </Column>
         <Column
@@ -92,8 +92,8 @@
           bodyClass="w-[5%] text-center"
         >
           <template #body="{ data }">
-            <tag v-if="data.type == 'live'">Live</tag>
-            <tag v-if="data.type == 'staging'" severity="warning" class="p-1"
+            <tag v-if="data.type === 1">Live</tag>
+            <tag v-if="data.type === 2" severity="warning" class="p-1"
               >Staging</tag
             >
           </template>
@@ -135,7 +135,8 @@ export default {
   },
   computed: {
     sites() {
-      return this.$store.state.sites[this.$route.params.serverid];
+      console.log(this.$store.state.sites)
+      return this.$store.getters.sites(this.$route.params.serverid)
     },
   },
 };

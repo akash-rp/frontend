@@ -1,7 +1,8 @@
 export default {
   methods: {
     onSiteRowSelect(event) {
-      this.$router.push("/site/" + event.data.siteId);
+      console.log(event)
+      this.$router.push("/site/" + event.data.id);
       this.$store.commit("setCurrentSite", event.data);
     },
   },

@@ -249,15 +249,7 @@
 
 <script>
 // import { Switch } from "ant-design-vue";
-import "ant-design-vue/lib/switch/style/index.css";
 import { Select } from "ant-design-vue";
-import "ant-design-vue/lib/select/style/index.css";
-// import { Button } from "ant-design-vue";
-import "ant-design-vue/lib/button/style/index.css";
-// import { Input } from "ant-design-vue";
-import "ant-design-vue/lib/input/style/index.css";
-// import { InputNumber } from "ant-design-vue";
-import "ant-design-vue/lib/input-number/style/index.css";
 // import { useToast } from "vue-toastification";
 import RemoteBackupSettings from "./RemoteBackupSettings.vue";
 

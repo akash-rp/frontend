@@ -76,7 +76,7 @@ export default {
         this.flow = res.data;
       })
       .catch((err) => {
-        if (err.response.data.error.id == "session_already_available") {
+        if (err.response.data.error?.id == "session_already_available") {
           this.$router.push("/servers");
         }
       });

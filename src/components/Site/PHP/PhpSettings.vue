@@ -165,7 +165,7 @@ export default {
   },
   created() {
     this.$axios
-      .get("/site/" + this.$route.params.siteid + "/getPHPSettings")
+      .get("/site/" + this.$route.params.siteid + "/php/settings")
       .then((res) => {
         this.settings = res.data;
       });
@@ -174,11 +174,11 @@ export default {
     settings: {
       deep: true,
       handler(data) {
-        if (data.instances == 1 && data["PHP_LSAPI_CHILDREN"] > 1) {
+        if (data.instances === 1 && data["PHP_LSAPI_CHILDREN"] > 1) {
           this.mode = "processgroup";
         } else this.mode = "worker";
 
-        if (this.mode == "processgroup") {
+        if (this.mode === "processgroup") {
           this.settings.maxConns = this.settings.PHP_LSAPI_CHILDREN;
         } else {
           this.settings.maxConns = this.settings.instances;
@@ -186,7 +186,7 @@ export default {
       },
     },
     mode(data) {
-      if (data == "processgroup") {
+      if (data === "processgroup") {
         this.instancesDisable = true;
         this.settings.instances = 1;
         this.childrenDisable = false;
@@ -195,7 +195,7 @@ export default {
         if (this.settings.PHP_LSAPI_CHILDREN < 2) {
           this.settings.PHP_LSAPI_CHILDREN = 5;
         }
-      } else if (data == "worker") {
+      } else if (data === "worker") {
         this.instancesDisable = false;
 
         this.childrenDisable = true;
@@ -216,7 +216,7 @@ export default {
     updatePhpSettings() {
       console.log(this.settings);
       this.$axios
-        .post("/site/" + this.$route.params.siteid + "/updatePHPsettings", {
+        .patch("/site/" + this.$route.params.siteid + "/php/settings", {
           settings: this.settings,
         })
         .then((res) => {

@@ -7,7 +7,7 @@
     "preview": "vite preview --port 5050"
   },
   "dependencies": {
-    "ant-design-vue": "^3.1.1",
+    "ant-design-vue": "^4.0.2",
     "apexcharts": "^3.33.2",
     "axios": "^0.26.0",
     "lodash": "^4.17.21",
@@ -16,6 +16,7 @@
     "primeicons": "^6.0.1",
     "primevue": "^3.29.2",
     "typescript": "^5.1.6",
+    "uuid-validate": "^0.0.3",
     "vue": "^3.2.31",
     "vue-axios": "^3.4.1",
     "vue-loading-overlay": "5.0",

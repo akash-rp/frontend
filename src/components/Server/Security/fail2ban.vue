@@ -69,7 +69,7 @@ export default {
   },
   created() {
     this.$axios
-      .get("/server/" + this.$route.params.serverid + "/fail2ban/ip")
+      .get("/server/" + this.$route.params.serverid + "/fail2ban")
       .then((res) => {
         this.ips = res.data;
       })
@@ -79,7 +79,7 @@ export default {
   },
   methods: {
     deleteIP(data) {
-      return this.$axios.post(
+      return this.$axios.delete(
         "/server/" + this.$route.params.serverid + "/fail2ban/unban",
         {
           ip: data,
